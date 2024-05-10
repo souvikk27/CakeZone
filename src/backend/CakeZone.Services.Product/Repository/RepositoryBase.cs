@@ -1,6 +1,5 @@
 ﻿using CakeZone.Services.Product.Specification;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 using CakeZone.Services.Product.Model.Exceptions;
 
@@ -35,66 +34,68 @@ namespace CakeZone.Services.Product.Repository
         public virtual Expression<Func<TContext, DbSet<TEntity>>> DataSet() => null;
         public virtual Expression<Func<TEntity, object>> Key() => null;
 
-        public virtual TEntity GetById(object id)
+        public virtual async Task<TEntity> GetById(object id)
         {
-            var keyExpression = Key() ?? throw new InvalidOperationException("Key expression is not defined for this repository.");
-            // Create a parameter expression for the entity
-            var entityParameter = Expression.Parameter(typeof(TEntity), "entity");
-            // Access the key property using the Key expression
-            var keyAccessExpression = Expression.Invoke(keyExpression, entityParameter);
-            var castedKey = Expression.Convert(keyAccessExpression, typeof(Guid));
-            // Create a lambda expression for the predicate
-            var lambda = Expression.Lambda<Func<TEntity, bool>>(
-                Expression.Equal(castedKey, Expression.Constant(id)),
-                entityParameter
-            );
-            // Use the lambda expression to retrieve the entity by ID
-            var entity = Context.Set<TEntity>().SingleOrDefault(lambda);
+            var keyExpression = Key() ?? throw new InvalidOperationException("Key expression is not defined for this repository");
+
+            // Check if the key is a Guid to avoid unnecessary conversion
+            if (keyExpression.Body.Type != typeof(Guid))
+            {
+                throw new InvalidOperationException("Key expression must return a Guid type");
+            }
+
+            var entityId = (Guid)id;
+
+            // Use FindAsync for direct database query instead of SingleOrDefaultAsync with a lambda
+            var entity = await Context.Set<TEntity>().FindAsync(entityId);
+
             if (entity == null)
             {
                 var entityTypeName = typeof(TEntity).Name;
-                throw new NotFoundApiException($"{entityTypeName} with ID '{id}'");
+                throw new NotFoundApiException($"Entity {entityTypeName} with ID '{id}' not found");
             }
+
             return entity;
         }
 
 
-        public virtual IEnumerable<TEntity> GetAll()
+        public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
             var entity = DataSet().Compile()(Context);
-            return entity.ToList();
+            return await entity.ToListAsync();
         }
 
 
-        public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return Context.Set<TEntity>().Where(predicate).ToList();
+            return await Context.Set<TEntity>().Where(predicate).ToListAsync();
         }
 
 
-        public virtual TEntity Add(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            EntityEntry<TEntity> entityEntry = Context.Set<TEntity>().Add(entity);
+            var entityEntry = await Context.Set<TEntity>().AddAsync(entity);
             return entityEntry.Entity;
         }
 
 
-        public virtual TEntity Update(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
+            await Task.Yield();
             return entity;
         }
 
 
-        public virtual void Remove(TEntity entity)
+        public virtual async Task Remove(TEntity entity)
         {
-            Context.Set<TEntity>().Remove(entity);
+            await Task.Run(() => Context.Set<TEntity>().Remove(entity)); 
         }
 
 
-        public virtual void Save()
+        public virtual async Task SaveAsync()
         {
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
         }
     }
 }

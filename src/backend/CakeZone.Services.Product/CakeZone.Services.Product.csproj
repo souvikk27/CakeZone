@@ -28,7 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Shared\" />
+    <Folder Include="Endpoints\" />
+    <Folder Include="Repository\Category\" />
+    <Folder Include="Repository\Product\" />
   </ItemGroup>
 
 </Project>

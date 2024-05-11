@@ -1,4 +1,5 @@
 ﻿using CakeZone.Services.Product.Data;
+using CakeZone.Services.Product.Repository.Attribute;
 using CakeZone.Services.Product.Repository.Category;
 using CakeZone.Services.Product.Repository.Product;
 using CakeZone.Services.Product.Services.Logging;
@@ -25,6 +26,7 @@ namespace CakeZone.Services.Product.Extension
         {
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IAttributeRepository, AttributeRepository>();
             services.AddScoped(typeof(Repository.IRepositoryOptions<>), typeof(Repository.RepositoryOptions<>));
         }
     }

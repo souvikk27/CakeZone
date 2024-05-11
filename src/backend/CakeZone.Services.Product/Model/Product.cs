@@ -8,13 +8,16 @@ namespace CakeZone.Services.Product.Model
 {
     public partial class Product
     {
-        [Key] public Guid ProductId { get; set; }
-        [Required] public string Name { get; set; }
+        [Key] 
+        public Guid ProductId { get; set; }
+        public string Name { get; set; }
+        public string Sku { get; set; }
         public string Description { get; set; }
-        public Guid? CategoryId { get; set; }
         public decimal Price { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAt { get; set; }
         public virtual ICollection<Category> Categories { get; set; }
         public virtual ICollection<Attribute> Attributes { get; set; }
         public virtual ICollection<ProductImage> ProductImages { get; set; }

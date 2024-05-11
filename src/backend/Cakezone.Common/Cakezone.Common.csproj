@@ -11,10 +11,10 @@
 
     <ItemGroup>
       <Folder Include="Extension\" />
-      <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
@@ -26,12 +26,6 @@
 
     <ItemGroup>
       <None Remove="appsettings.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.EntityFrameworkCore">
-        <HintPath>..\..\..\..\..\..\..\..\..\..\home\souvik\.nuget\packages\microsoft.entityframeworkcore\8.0.4\lib\net8.0\Microsoft.EntityFrameworkCore.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,886 @@
+2024-05-12 00:21:25.817 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 00:21:26.175 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 00:22:43.751 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 00:22:46.536 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 00:22:47.254 +05:30 [INF] Executed DbCommand (614ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+CREATE DATABASE [CakeZoneProductAPI];
+2024-05-12 00:22:47.500 +05:30 [INF] Executed DbCommand (238ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [CakeZoneProductAPI] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+2024-05-12 00:22:47.575 +05:30 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2024-05-12 00:22:47.678 +05:30 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [__EFMigrationsHistory] (
+    [MigrationId] nvarchar(150) NOT NULL,
+    [ProductVersion] nvarchar(32) NOT NULL,
+    CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+);
+2024-05-12 00:22:47.688 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2024-05-12 00:22:47.713 +05:30 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2024-05-12 00:22:47.745 +05:30 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2024-05-12 00:22:47.761 +05:30 [INF] Applying migration '20240511185136_initial'.
+2024-05-12 00:22:47.813 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Attributes] (
+    [AttributeId] uniqueidentifier NOT NULL,
+    [Name] nvarchar(max) NOT NULL,
+    [Description] nvarchar(max) NOT NULL,
+    [Type] nvarchar(max) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NULL,
+    [IsDeleted] bit NOT NULL,
+    [DeletedAt] datetime2 NULL,
+    CONSTRAINT [PK_Attributes] PRIMARY KEY ([AttributeId])
+);
+2024-05-12 00:22:47.826 +05:30 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Categories] (
+    [CategoryId] uniqueidentifier NOT NULL,
+    [Name] nvarchar(max) NOT NULL,
+    [ParentCategoryId] uniqueidentifier NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NULL,
+    [IsDeleted] bit NOT NULL,
+    [DeletedAt] datetime2 NULL,
+    CONSTRAINT [PK_Categories] PRIMARY KEY ([CategoryId]),
+    CONSTRAINT [FK_Categories_Categories_ParentCategoryId] FOREIGN KEY ([ParentCategoryId]) REFERENCES [Categories] ([CategoryId]) ON DELETE NO ACTION
+);
+2024-05-12 00:22:47.841 +05:30 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Products] (
+    [ProductId] uniqueidentifier NOT NULL DEFAULT (newid()),
+    [Name] nvarchar(max) NOT NULL,
+    [Description] nvarchar(max) NOT NULL,
+    [Price] decimal(18,2) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NULL,
+    [IsDeleted] bit NOT NULL,
+    [DeletedAt] datetime2 NULL,
+    CONSTRAINT [PK_Products_5793275AF5B5B6D7] PRIMARY KEY ([ProductId])
+);
+2024-05-12 00:22:47.855 +05:30 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ProductAttributes] (
+    [AttributeId] uniqueidentifier NOT NULL,
+    [ProductId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_ProductAttributes] PRIMARY KEY ([AttributeId], [ProductId]),
+    CONSTRAINT [FK_Attributes_5683275AF5B5B6D7] FOREIGN KEY ([AttributeId]) REFERENCES [Attributes] ([AttributeId]),
+    CONSTRAINT [FK_Products_5793275AF5B5B69F] FOREIGN KEY ([ProductId]) REFERENCES [Products] ([ProductId])
+);
+2024-05-12 00:22:47.868 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ProductCategories] (
+    [ProductId] uniqueidentifier NOT NULL,
+    [CategoryId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_ProductCategories] PRIMARY KEY ([ProductId], [CategoryId]),
+    CONSTRAINT [FK_Category_G798FB98899322] FOREIGN KEY ([CategoryId]) REFERENCES [Categories] ([CategoryId]),
+    CONSTRAINT [FK_Products_5793275AF5B5B6D7] FOREIGN KEY ([ProductId]) REFERENCES [Products] ([ProductId])
+);
+2024-05-12 00:22:47.880 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ProductImages] (
+    [Id] uniqueidentifier NOT NULL,
+    [ProductId] uniqueidentifier NOT NULL,
+    [Url] nvarchar(max) NOT NULL,
+    [IsMain] bit NOT NULL,
+    [AltText] nvarchar(max) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NULL,
+    [IsDeleted] bit NOT NULL,
+    [DeletedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_ProductImages] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_ProductImages_Products_ProductId] FOREIGN KEY ([ProductId]) REFERENCES [Products] ([ProductId])
+);
+2024-05-12 00:22:47.892 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Categories_ParentCategoryId] ON [Categories] ([ParentCategoryId]);
+2024-05-12 00:22:47.900 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ProductAttributes_ProductId] ON [ProductAttributes] ([ProductId]);
+2024-05-12 00:22:47.908 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ProductCategories_CategoryId] ON [ProductCategories] ([CategoryId]);
+2024-05-12 00:22:47.915 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ProductImages_ProductId] ON [ProductImages] ([ProductId]);
+2024-05-12 00:22:47.931 +05:30 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240511185136_initial', N'8.0.4');
+2024-05-12 00:25:42.091 +05:30 [INF] Now listening on: https://localhost:7116
+2024-05-12 00:25:42.220 +05:30 [INF] Now listening on: http://localhost:5192
+2024-05-12 00:25:42.230 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-12 00:25:42.235 +05:30 [INF] Hosting environment: Development
+2024-05-12 00:25:42.242 +05:30 [INF] Content root path: X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product
+2024-05-12 00:25:42.945 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 00:25:43.342 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 410.0488ms
+2024-05-12 00:25:43.414 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 00:25:43.432 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 17.6695ms
+2024-05-12 00:25:43.460 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 00:25:43.653 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 193.5181ms
+2024-05-12 00:25:43.772 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 00:25:44.059 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 296.629ms
+2024-05-12 00:30:09.121 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 00:30:09.166 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 45.7743ms
+2024-05-12 00:30:09.186 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 00:30:09.186 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 00:30:09.204 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 17.798ms
+2024-05-12 00:30:09.231 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 45.0984ms
+2024-05-12 00:30:09.309 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 00:30:09.327 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 17.9082ms
+2024-05-12 00:30:13.238 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 00:30:13.252 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 14.6252ms
+2024-05-12 00:30:13.303 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 00:30:13.303 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 00:30:13.319 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 18.6448ms
+2024-05-12 00:30:13.331 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 30.5428ms
+2024-05-12 00:30:13.419 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 00:30:13.434 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 15.3471ms
+2024-05-12 00:33:15.908 +05:30 [INF] Now listening on: https://localhost:7116
+2024-05-12 00:33:16.008 +05:30 [INF] Now listening on: http://localhost:5192
+2024-05-12 00:33:16.014 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-12 00:33:16.021 +05:30 [INF] Hosting environment: Development
+2024-05-12 00:33:16.030 +05:30 [INF] Content root path: X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product
+2024-05-12 00:33:16.459 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 00:33:16.764 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 309.7543ms
+2024-05-12 00:33:16.796 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 00:33:16.810 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 14.6384ms
+2024-05-12 00:33:16.847 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 00:33:16.946 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 99.4842ms
+2024-05-12 00:33:16.999 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 00:33:17.173 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 174.4492ms
+2024-05-12 00:35:26.592 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7116/api/v1/products - application/json 575
+2024-05-12 00:35:26.621 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:35:26.659 +05:30 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateProduct(CakeZone.Services.Product.Shared.ProductsDto) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:35:26.827 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) in 156.8531ms
+2024-05-12 00:35:26.895 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:35:27.038 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Unable to resolve service for type 'CakeZone.Services.Product.Repository.Product.IProductRepository' while attempting to activate 'CakeZone.Services.Product.Controllers.ProductController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method9(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2024-05-12 00:35:27.098 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7116/api/v1/products - 500 null text/plain; charset=utf-8 506.1948ms
+2024-05-12 00:36:07.004 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7116/api/v1/products - application/json 575
+2024-05-12 00:36:07.028 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:36:07.035 +05:30 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateProduct(CakeZone.Services.Product.Shared.ProductsDto) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:36:07.167 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) in 123.6667ms
+2024-05-12 00:36:07.229 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:36:07.367 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Unable to resolve service for type 'CakeZone.Services.Product.Repository.Product.IProductRepository' while attempting to activate 'CakeZone.Services.Product.Controllers.ProductController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method9(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2024-05-12 00:36:07.383 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7116/api/v1/products - 500 null text/plain; charset=utf-8 389.9989ms
+2024-05-12 00:39:20.893 +05:30 [INF] Now listening on: https://localhost:7116
+2024-05-12 00:39:21.385 +05:30 [INF] Now listening on: http://localhost:5192
+2024-05-12 00:39:21.392 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-12 00:39:21.400 +05:30 [INF] Hosting environment: Development
+2024-05-12 00:39:21.403 +05:30 [INF] Content root path: X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product
+2024-05-12 00:39:21.512 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 00:39:21.853 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 347.1918ms
+2024-05-12 00:39:22.019 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 00:39:22.021 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 00:39:22.051 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 32.7513ms
+2024-05-12 00:39:22.177 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 156.003ms
+2024-05-12 00:39:22.230 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 00:39:22.443 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 213.2983ms
+2024-05-12 00:39:26.033 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7116/api/v1/products - application/json 575
+2024-05-12 00:39:26.051 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:39:26.083 +05:30 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateProduct(CakeZone.Services.Product.Shared.ProductsDto) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:39:28.219 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 00:39:28.716 +05:30 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2024-05-12 00:39:28.755 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) in 2652.2426ms
+2024-05-12 00:39:28.763 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:39:28.786 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7116/api/v1/products - 400 null application/json; charset=utf-8 2752.9585ms
+2024-05-12 00:40:18.542 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7116/api/v1/products - application/json 538
+2024-05-12 00:40:18.561 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:40:18.568 +05:30 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateProduct(CakeZone.Services.Product.Shared.ProductsDto) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:40:18.794 +05:30 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2024-05-12 00:40:18.801 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) in 225.3728ms
+2024-05-12 00:40:18.808 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:40:18.820 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7116/api/v1/products - 400 null application/json; charset=utf-8 278.6144ms
+2024-05-12 00:40:50.600 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7116/api/v1/products - application/json 537
+2024-05-12 00:40:50.652 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:40:50.659 +05:30 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateProduct(CakeZone.Services.Product.Shared.ProductsDto) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:40:50.695 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 00:40:55.043 +05:30 [INF] Executed DbCommand (629ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Boolean), @p5='?' (Size = 4000), @p6='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p7='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [Products] ([ProductId], [CreatedAt], [DeletedAt], [Description], [IsDeleted], [Name], [Price], [UpdatedAt])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+2024-05-12 00:40:55.103 +05:30 [INF] Executed action method CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 4370.7379ms.
+2024-05-12 00:40:55.116 +05:30 [INF] Executing OkObjectResult, writing value of type 'CakeZone.Common.Models.Generic.ApiResponseModel`1[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2024-05-12 00:40:55.154 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) in 4485.8866ms
+2024-05-12 00:40:55.162 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 00:40:55.173 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7116/api/v1/products - 200 null application/json; charset=utf-8 4573.3588ms
+2024-05-12 00:54:05.421 +05:30 [INF] Now listening on: https://localhost:7116
+2024-05-12 00:54:05.929 +05:30 [INF] Now listening on: http://localhost:5192
+2024-05-12 00:54:05.942 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-12 00:54:05.946 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 00:54:05.953 +05:30 [INF] Hosting environment: Development
+2024-05-12 00:54:05.963 +05:30 [INF] Content root path: X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product
+2024-05-12 00:54:06.263 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 320.8425ms
+2024-05-12 00:54:06.309 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 00:54:06.327 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 17.6577ms
+2024-05-12 00:54:06.374 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 00:54:06.466 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 92.737ms
+2024-05-12 00:54:06.544 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 00:54:06.720 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 176.0552ms
+2024-05-12 00:55:02.523 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 00:55:02.545 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:55:02.576 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:55:04.605 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 00:55:04.863 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 00:55:05.215 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 2626.3418ms
+2024-05-12 00:55:05.281 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:55:05.402 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Key expression must return a Guid type
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 44
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2024-05-12 00:55:05.559 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 500 null text/plain; charset=utf-8 3035.761ms
+2024-05-12 00:55:45.945 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 00:55:45.998 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:55:46.003 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:55:46.066 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 00:55:46.379 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 368.8996ms
+2024-05-12 00:55:46.449 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:55:46.582 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Key expression must return a Guid type
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 44
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2024-05-12 00:55:46.595 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 500 null text/plain; charset=utf-8 650.2501ms
+2024-05-12 00:55:56.172 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 00:55:56.181 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:55:56.187 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:55:56.209 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 00:55:56.493 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 297.3595ms
+2024-05-12 00:55:56.553 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:55:56.680 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Key expression must return a Guid type
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 44
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2024-05-12 00:55:56.696 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 500 null text/plain; charset=utf-8 524.7703ms
+2024-05-12 00:55:57.339 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 00:55:57.347 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:55:57.355 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:55:57.365 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 00:55:57.689 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 324.3794ms
+2024-05-12 00:55:57.765 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:55:57.893 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Key expression must return a Guid type
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 44
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2024-05-12 00:55:57.904 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 500 null text/plain; charset=utf-8 566.2807ms
+2024-05-12 00:57:29.724 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 00:57:29.843 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 00:57:29.911 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 00:57:29.940 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:04:37.871 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 01:04:38.171 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 01:08:01.001 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 01:08:03.070 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 01:08:03.729 +05:30 [INF] Executed DbCommand (561ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+CREATE DATABASE [CakeZoneProductAPI];
+2024-05-12 01:08:03.986 +05:30 [INF] Executed DbCommand (250ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [CakeZoneProductAPI] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+2024-05-12 01:08:04.069 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2024-05-12 01:08:04.178 +05:30 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [__EFMigrationsHistory] (
+    [MigrationId] nvarchar(150) NOT NULL,
+    [ProductVersion] nvarchar(32) NOT NULL,
+    CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+);
+2024-05-12 01:08:04.186 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2024-05-12 01:08:04.212 +05:30 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2024-05-12 01:08:04.241 +05:30 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2024-05-12 01:08:04.256 +05:30 [INF] Applying migration '20240511193444_initial'.
+2024-05-12 01:08:04.304 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Attributes] (
+    [AttributeId] uniqueidentifier NOT NULL,
+    [Name] nvarchar(max) NOT NULL,
+    [Description] nvarchar(max) NOT NULL,
+    [Type] nvarchar(max) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NULL,
+    [IsDeleted] bit NOT NULL,
+    [DeletedAt] datetime2 NULL,
+    CONSTRAINT [PK_Attributes] PRIMARY KEY ([AttributeId])
+);
+2024-05-12 01:08:04.315 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Categories] (
+    [CategoryId] uniqueidentifier NOT NULL,
+    [Name] nvarchar(max) NOT NULL,
+    [ParentCategoryId] uniqueidentifier NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NULL,
+    [IsDeleted] bit NOT NULL,
+    [DeletedAt] datetime2 NULL,
+    CONSTRAINT [PK_Categories] PRIMARY KEY ([CategoryId]),
+    CONSTRAINT [FK_Categories_Categories_ParentCategoryId] FOREIGN KEY ([ParentCategoryId]) REFERENCES [Categories] ([CategoryId]) ON DELETE NO ACTION
+);
+2024-05-12 01:08:04.326 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Products] (
+    [ProductId] uniqueidentifier NOT NULL DEFAULT (newid()),
+    [Name] nvarchar(max) NOT NULL,
+    [Sku] nvarchar(max) NOT NULL,
+    [Description] nvarchar(max) NOT NULL,
+    [Price] decimal(18,2) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NULL,
+    [IsDeleted] bit NOT NULL,
+    [DeletedAt] datetime2 NULL,
+    CONSTRAINT [PK_Products_5793275AF5B5B6D7] PRIMARY KEY ([ProductId])
+);
+2024-05-12 01:08:04.338 +05:30 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ProductAttributes] (
+    [AttributeId] uniqueidentifier NOT NULL,
+    [ProductId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_ProductAttributes] PRIMARY KEY ([AttributeId], [ProductId]),
+    CONSTRAINT [FK_Attributes_5683275AF5B5B6D7] FOREIGN KEY ([AttributeId]) REFERENCES [Attributes] ([AttributeId]),
+    CONSTRAINT [FK_Products_5793275AF5B5B69F] FOREIGN KEY ([ProductId]) REFERENCES [Products] ([ProductId])
+);
+2024-05-12 01:08:04.349 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ProductCategories] (
+    [ProductId] uniqueidentifier NOT NULL,
+    [CategoryId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_ProductCategories] PRIMARY KEY ([ProductId], [CategoryId]),
+    CONSTRAINT [FK_Category_G798FB98899322] FOREIGN KEY ([CategoryId]) REFERENCES [Categories] ([CategoryId]),
+    CONSTRAINT [FK_Products_5793275AF5B5B6D7] FOREIGN KEY ([ProductId]) REFERENCES [Products] ([ProductId])
+);
+2024-05-12 01:08:04.360 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [ProductImages] (
+    [Id] uniqueidentifier NOT NULL,
+    [ProductId] uniqueidentifier NOT NULL,
+    [Url] nvarchar(max) NOT NULL,
+    [IsMain] bit NOT NULL,
+    [AltText] nvarchar(max) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [UpdatedAt] datetime2 NULL,
+    [IsDeleted] bit NOT NULL,
+    [DeletedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_ProductImages] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_ProductImages_Products_ProductId] FOREIGN KEY ([ProductId]) REFERENCES [Products] ([ProductId])
+);
+2024-05-12 01:08:04.368 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Categories_ParentCategoryId] ON [Categories] ([ParentCategoryId]);
+2024-05-12 01:08:04.375 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ProductAttributes_ProductId] ON [ProductAttributes] ([ProductId]);
+2024-05-12 01:08:04.385 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ProductCategories_CategoryId] ON [ProductCategories] ([CategoryId]);
+2024-05-12 01:08:04.394 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_ProductImages_ProductId] ON [ProductImages] ([ProductId]);
+2024-05-12 01:08:05.476 +05:30 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240511193444_initial', N'8.0.4');
+2024-05-12 01:10:29.734 +05:30 [INF] Now listening on: https://localhost:7116
+2024-05-12 01:10:30.072 +05:30 [INF] Now listening on: http://localhost:5192
+2024-05-12 01:10:30.080 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-12 01:10:30.085 +05:30 [INF] Hosting environment: Development
+2024-05-12 01:10:30.095 +05:30 [INF] Content root path: X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product
+2024-05-12 01:10:30.235 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 01:10:30.640 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 409.0512ms
+2024-05-12 01:10:30.674 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 01:10:30.691 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 17.9211ms
+2024-05-12 01:10:30.732 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 01:10:30.808 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 77.003ms
+2024-05-12 01:10:30.884 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 01:10:31.086 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 201.9631ms
+2024-05-12 01:11:40.989 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7116/api/v1/products - application/json 659
+2024-05-12 01:11:41.018 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 01:11:41.049 +05:30 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateProduct(CakeZone.Services.Product.Shared.ProductsDto) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:11:43.076 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 01:11:43.376 +05:30 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2024-05-12 01:11:43.412 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) in 2342.4381ms
+2024-05-12 01:11:43.423 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 01:11:43.443 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7116/api/v1/products - 400 null application/json; charset=utf-8 2454.052ms
+2024-05-12 01:12:05.356 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7116/api/v1/products - application/json 452
+2024-05-12 01:12:05.365 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 01:12:05.373 +05:30 [INF] Route matched with {action = "CreateProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateProduct(CakeZone.Services.Product.Shared.ProductsDto) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:12:05.445 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:12:08.594 +05:30 [INF] Executed DbCommand (256ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (Size = 4000), @p4='?' (DbType = Boolean), @p5='?' (Size = 4000), @p6='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p7='?' (Size = 4000), @p8='?' (DbType = DateTime2)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [Products] ([ProductId], [CreatedAt], [DeletedAt], [Description], [IsDeleted], [Name], [Price], [Sku], [UpdatedAt])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+2024-05-12 01:12:08.651 +05:30 [INF] Executed action method CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 3194.9246ms.
+2024-05-12 01:12:08.666 +05:30 [INF] Executing OkObjectResult, writing value of type 'CakeZone.Common.Models.Generic.ApiResponseModel`1[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2024-05-12 01:12:08.705 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product) in 3324.4059ms
+2024-05-12 01:12:08.717 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.CreateProduct (CakeZone.Services.Product)'
+2024-05-12 01:12:08.741 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7116/api/v1/products - 200 null application/json; charset=utf-8 3385.1761ms
+2024-05-12 01:13:29.361 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 01:13:29.373 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:13:29.385 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:13:29.407 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:13:32.285 +05:30 [INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+2024-05-12 01:13:32.564 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 3171.2115ms
+2024-05-12 01:13:32.635 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:13:32.759 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2024-05-12 01:13:32.912 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 500 null text/plain; charset=utf-8 3551.9454ms
+2024-05-12 01:16:14.001 +05:30 [INF] Now listening on: https://localhost:7116
+2024-05-12 01:16:14.111 +05:30 [INF] Now listening on: http://localhost:5192
+2024-05-12 01:16:14.117 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-12 01:16:14.122 +05:30 [INF] Hosting environment: Development
+2024-05-12 01:16:14.127 +05:30 [INF] Content root path: X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product
+2024-05-12 01:16:14.658 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 01:16:15.067 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 414.4571ms
+2024-05-12 01:16:15.140 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 01:16:15.166 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 27.7705ms
+2024-05-12 01:16:15.218 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 01:16:15.346 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 127.985ms
+2024-05-12 01:16:15.427 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 01:16:15.630 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 204.0458ms
+2024-05-12 01:16:21.248 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 01:16:21.264 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:21.295 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:16:23.480 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 01:16:23.774 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:16:37.956 +05:30 [INF] Now listening on: https://localhost:7116
+2024-05-12 01:16:38.056 +05:30 [INF] Now listening on: http://localhost:5192
+2024-05-12 01:16:38.062 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2024-05-12 01:16:38.067 +05:30 [INF] Hosting environment: Development
+2024-05-12 01:16:38.072 +05:30 [INF] Content root path: X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product
+2024-05-12 01:16:39.016 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/index.html - null null
+2024-05-12 01:16:39.473 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/index.html - 200 null text/html;charset=utf-8 477.2523ms
+2024-05-12 01:16:39.518 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - null null
+2024-05-12 01:16:39.561 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/_vs/browserLink - null null
+2024-05-12 01:16:39.605 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_framework/aspnetcore-browser-refresh.js - 200 13786 application/javascript; charset=utf-8 87.9424ms
+2024-05-12 01:16:39.686 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/_vs/browserLink - 200 null text/javascript; charset=UTF-8 125.0704ms
+2024-05-12 01:16:39.726 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - null null
+2024-05-12 01:16:39.927 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7116/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 200.5612ms
+2024-05-12 01:16:43.278 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 01:16:43.297 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:43.330 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:16:44.863 +05:30 [WRN] No store type was specified for the decimal property 'Price' on entity type 'Product'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2024-05-12 01:16:45.091 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:16:47.973 +05:30 [INF] Executed DbCommand (43ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+2024-05-12 01:16:48.364 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 5022.848ms
+2024-05-12 01:16:48.428 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:48.476 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:16:48.576 +05:30 [ERR] Something went wrong CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:16:48.608 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 404 null application/json 5330.0841ms
+2024-05-12 01:16:53.226 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 01:16:53.240 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:53.250 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:16:53.322 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:16:53.341 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+2024-05-12 01:16:53.695 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 435.6779ms
+2024-05-12 01:16:53.758 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:53.798 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:16:53.811 +05:30 [ERR] Something went wrong CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:16:53.819 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 404 null application/json 594.0421ms
+2024-05-12 01:16:55.706 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 01:16:55.716 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:55.724 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:16:55.745 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:16:55.757 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+2024-05-12 01:16:56.052 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 322.6978ms
+2024-05-12 01:16:56.121 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:56.160 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:16:56.174 +05:30 [ERR] Something went wrong CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:16:56.180 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 404 null application/json 474.9905ms
+2024-05-12 01:16:56.694 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 01:16:56.703 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:56.711 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:16:56.720 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:16:56.729 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+2024-05-12 01:16:57.038 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 318.7262ms
+2024-05-12 01:16:57.106 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:16:57.147 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:16:57.160 +05:30 [ERR] Something went wrong CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:16:57.175 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 404 null application/json 481.2463ms
+2024-05-12 01:17:03.317 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 01:17:03.328 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:17:03.334 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:17:03.341 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:17:03.357 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+2024-05-12 01:17:03.713 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 372.4609ms
+2024-05-12 01:17:03.785 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:17:03.823 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:17:03.837 +05:30 [ERR] Something went wrong CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:17:03.845 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 404 null application/json 529.6843ms
+2024-05-12 01:17:05.556 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - null null
+2024-05-12 01:17:05.566 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:17:05.573 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:17:05.583 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:17:05.596 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+2024-05-12 01:17:05.915 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 334.9537ms
+2024-05-12 01:17:05.984 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:17:06.027 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:17:06.043 +05:30 [ERR] Something went wrong CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID '091d3b42-1927-4da9-a0d5-3311c5ef56ba'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:17:06.050 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/091d3b42-1927-4da9-a0d5-3311c5ef56ba - 404 null application/json 494.2421ms
+2024-05-12 01:17:46.120 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/f36bc322-d283-485d-ae0e-2074b3ec5e12 - null null
+2024-05-12 01:17:46.146 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:17:46.152 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:17:46.168 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:17:46.186 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = 'f36bc322-d283-485d-ae0e-2074b3ec5e12'
+2024-05-12 01:17:46.519 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 351.8498ms
+2024-05-12 01:17:46.587 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:17:46.621 +05:30 [ERR] An unhandled exception has occurred while executing the request.
+CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID 'f36bc322-d283-485d-ae0e-2074b3ec5e12'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:17:46.635 +05:30 [ERR] Something went wrong CakeZone.Common.Models.Exception.NotFoundApiException: The requested resource was not found. Product with ID 'f36bc322-d283-485d-ae0e-2074b3ec5e12'
+   at CakeZone.Common.Repository.RepositoryBase`2.GetById(Object id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\Cakezone.Common\Repository\RepositoryBase.cs:line 55
+   at CakeZone.Services.Product.Controllers.ProductController.DeleteProduct(Guid id) in X:\Code\Dot NET\cake-zone\CakeZone\src\backend\CakeZone.Services.Product\Controllers\ProductController.cs:line 45
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+2024-05-12 01:17:46.642 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/f36bc322-d283-485d-ae0e-2074b3ec5e12 - 404 null application/json 522.0917ms
+2024-05-12 01:18:52.394 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7116/api/v1/products/919D83E8-9457-4C30-9FFB-7184DD18AFD8 - null null
+2024-05-12 01:18:52.403 +05:30 [INF] Executing endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:18:52.410 +05:30 [INF] Route matched with {action = "DeleteProduct", controller = "Product"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteProduct(System.Guid) on controller CakeZone.Services.Product.Controllers.ProductController (CakeZone.Services.Product).
+2024-05-12 01:18:52.419 +05:30 [INF] Executing action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) - Validation state: "Valid"
+2024-05-12 01:18:52.437 +05:30 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [p].[ProductId], [p].[CreatedAt], [p].[DeletedAt], [p].[Description], [p].[IsDeleted], [p].[Name], [p].[Price], [p].[Sku], [p].[UpdatedAt]
+FROM [Products] AS [p]
+WHERE CAST([p].[ProductId] AS uniqueidentifier) = '919d83e8-9457-4c30-9ffb-7184dd18afd8'
+2024-05-12 01:18:52.965 +05:30 [INF] Executed DbCommand (209ms) [Parameters=[@p0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+DELETE FROM [Products]
+OUTPUT 1
+WHERE [ProductId] = @p0;
+2024-05-12 01:18:53.010 +05:30 [INF] Executed action method CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 576.8304ms.
+2024-05-12 01:18:53.029 +05:30 [INF] Executing OkObjectResult, writing value of type 'CakeZone.Common.Models.Generic.ApiResponseModel`1[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2024-05-12 01:18:53.086 +05:30 [INF] Executed action CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product) in 668.1812ms
+2024-05-12 01:18:53.097 +05:30 [INF] Executed endpoint 'CakeZone.Services.Product.Controllers.ProductController.DeleteProduct (CakeZone.Services.Product)'
+2024-05-12 01:18:53.108 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7116/api/v1/products/919D83E8-9457-4C30-9FFB-7184DD18AFD8 - 200 null application/json; charset=utf-8 719.7496ms

@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{F1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CakeZone.Webapp", "src\frontend\CakeZone.Webapp\CakeZone.Webapp.csproj", "{98D7D7B9-689B-4FA4-AF86-393CC608429B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeZone.Services.Product", "src\backend\CakeZone.Services.Product\CakeZone.Services.Product.csproj", "{8B625B0A-F70D-4B53-B3FC-F0C3F1D16D3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CakeZone.Services.Product", "src\backend\CakeZone.Services.Product\CakeZone.Services.Product.csproj", "{8B625B0A-F70D-4B53-B3FC-F0C3F1D16D3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cakezone.Common", "src\backend\Cakezone.Common\Cakezone.Common.csproj", "{A6970FFC-1593-402C-A200-4B658D181E5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cakezone.Common", "src\backend\Cakezone.Common\Cakezone.Common.csproj", "{A6970FFC-1593-402C-A200-4B658D181E5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

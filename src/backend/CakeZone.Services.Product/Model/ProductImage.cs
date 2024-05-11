@@ -11,7 +11,7 @@ namespace CakeZone.Services.Product.Model
         public bool IsMain { get; set; }
         public string AltText { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime DeletedAt { get; set; }
         public Product Product { get; set; }

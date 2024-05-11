@@ -36,25 +36,24 @@ namespace CakeZone.Common.Repository
 
         public virtual async Task<TEntity> GetById(object id)
         {
-            var keyExpression = Key() ?? throw new InvalidOperationException("Key expression is not defined for this repository");
-
-            // Check if the key is a Guid to avoid unnecessary conversion
-            if (keyExpression.Body.Type != typeof(Guid))
-            {
-                throw new InvalidOperationException("Key expression must return a Guid type");
-            }
-
-            var entityId = (Guid)id;
-
-            // Use FindAsync for direct database query instead of SingleOrDefaultAsync with a lambda
-            var entity = await Context.Set<TEntity>().FindAsync(entityId);
-
+            var keyExpression = Key() ?? throw new InvalidOperationException("Key expression is not defined for this repository.");
+            // Create a parameter expression for the entity
+            var entityParameter = Expression.Parameter(typeof(TEntity), "entity");
+            // Access the key property using the Key expression
+            var keyAccessExpression = Expression.Invoke(keyExpression, entityParameter);
+            var castedKey = Expression.Convert(keyAccessExpression, typeof(Guid));
+            // Create a lambda expression for the predicate
+            var lambda = Expression.Lambda<Func<TEntity, bool>>(
+                Expression.Equal(castedKey, Expression.Constant(id)),
+                entityParameter
+            );
+            // Use the lambda expression to retrieve the entity by ID
+            var entity = Context.Set<TEntity>().SingleOrDefault(lambda);
             if (entity == null)
             {
                 var entityTypeName = typeof(TEntity).Name;
-                throw new NotFoundApiException($"Entity {entityTypeName} with ID '{id}' not found");
+                throw new NotFoundApiException($"{entityTypeName} with ID '{id}'");
             }
-
             return entity;
         }
 
@@ -62,7 +61,7 @@ namespace CakeZone.Common.Repository
         public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
             var entity = DataSet().Compile()(Context);
-            return await entity.ToListAsync();
+            return await entity.AsNoTracking().ToListAsync();
         }
 
 

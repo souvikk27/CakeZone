@@ -1,7 +1,9 @@
-﻿using CakeZone.Services.Product.Data;
+﻿using Cakezone.Common.Logging;
+using CakeZone.Services.Product.Data;
 using CakeZone.Services.Product.Extension;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using CakeZone.Services.Product.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -12,11 +14,11 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 builder.Services.ConfigureLogging(Log.Logger);
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDbContext(configuration);
-
+builder.Services.ConfigureMappings();
+builder.Services.ConfigureRepositories();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +31,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.ConfigureExceptionHandler(app.Services.GetRequiredService<ILoggerManager>());
 
 app.MapControllers();
 

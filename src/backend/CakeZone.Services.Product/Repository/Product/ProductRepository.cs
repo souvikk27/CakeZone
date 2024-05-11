@@ -1,10 +1,11 @@
-﻿using CakeZone.Services.Product.Data;
+﻿using System.Linq.Expressions;
+using CakeZone.Common.Repository;
+using CakeZone.Services.Product.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
-namespace CakeZone.Services.Product.Repository
+namespace CakeZone.Services.Product.Repository.Product
 {
-    public class ProductRepository : RepositoryBase<Model.Product, ApplicationDbContext>
+    public class ProductRepository : RepositoryBase<Model.Product, ApplicationDbContext>, IProductRepository
     {
         public ProductRepository(IRepositoryOptions<ApplicationDbContext> options) : base(options)
         {

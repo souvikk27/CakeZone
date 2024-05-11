@@ -1,4 +1,4 @@
-﻿namespace CakeZone.Services.Product.Model.API
+﻿namespace CakeZone.Common.Models.Generic
 {
     public class ApiResponseModel<T>
     {
@@ -21,7 +21,7 @@
             Payload = payload;
         }
 
-        public int GetStatusCode(ApiResponseStatusEnum status)
+        private int GetStatusCode(ApiResponseStatusEnum status)
         {
             int statusCode = 0;
             switch (status)

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace CakeZone.Services.Product.Specification
+namespace CakeZone.Common.Specification
 {
     public static class SpecificationEvaluator<TEntity> where TEntity : class
     {

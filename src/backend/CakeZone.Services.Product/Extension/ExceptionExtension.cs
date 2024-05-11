@@ -1,5 +1,6 @@
-﻿using CakeZone.Services.Product.Model.Error;
-using CakeZone.Services.Product.Model.Exceptions;
+﻿using Cakezone.Common.Logging;
+using CakeZone.Common.Models.Error;
+using CakeZone.Common.Models.Exception;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace CakeZone.Services.Product.Extension
@@ -34,4 +35,4 @@ namespace CakeZone.Services.Product.Extension
         }
     }
 }
-}
+

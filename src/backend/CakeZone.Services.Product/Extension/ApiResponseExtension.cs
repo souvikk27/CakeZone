@@ -1,4 +1,4 @@
-﻿using CakeZone.Services.Product.Model.API;
+﻿using CakeZone.Common.Models.Generic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeZone.Services.Product.Extension

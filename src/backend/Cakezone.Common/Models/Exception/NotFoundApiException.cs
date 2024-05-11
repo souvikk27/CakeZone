@@ -1,6 +1,6 @@
-﻿namespace CakeZone.Services.Product.Model.Exceptions
+﻿namespace CakeZone.Common.Models.Exception
 {
-    public class NotFoundApiException : Exception
+    public class NotFoundApiException : System.Exception
     {
         private const string NotFoundMessage = "The requested resource was not found.";
 
@@ -12,7 +12,7 @@
         {
         }
 
-        public NotFoundApiException(string resourceName, Exception innerException) : base($"{NotFoundMessage} {resourceName}", innerException)
+        public NotFoundApiException(string resourceName, System.Exception innerException) : base($"{NotFoundMessage} {resourceName}", innerException)
         {
         }
     }

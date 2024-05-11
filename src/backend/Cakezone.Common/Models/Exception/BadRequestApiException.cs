@@ -1,6 +1,6 @@
-﻿namespace CakeZone.Services.Product.Model.Exceptions
+﻿namespace CakeZone.Common.Models.Exception
 {
-    public class BadRequestApiException : Exception
+    public class BadRequestApiException : System.Exception
     {
         private const string BadRequestMessage = "The request is invalid";
 
@@ -12,7 +12,7 @@
         {
         }
 
-        public BadRequestApiException(string reason, Exception innerException) : base($"{BadRequestMessage} Reason : {reason}", innerException)
+        public BadRequestApiException(string reason, System.Exception innerException) : base($"{BadRequestMessage} Reason : {reason}", innerException)
         {
         }
     }

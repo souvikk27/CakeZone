@@ -1,9 +1,9 @@
-﻿using CakeZone.Services.Product.Specification;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using CakeZone.Services.Product.Model.Exceptions;
+using CakeZone.Common.Models.Exception;
+using CakeZone.Common.Specification;
 
-namespace CakeZone.Services.Product.Repository
+namespace CakeZone.Common.Repository
 {
     public class RepositoryBase<TEntity, TContext> where TEntity : class where TContext : DbContext
     {
@@ -28,7 +28,7 @@ namespace CakeZone.Services.Product.Repository
 
         public async Task<TEntity> FindAsync(ISpecification<TEntity> specification = null)
         {
-            return await Task.Run(() => ApplySpecificationList(specification).FirstOrDefault());
+            return await Task.Run(() => ApplySpecificationList(specification).FirstOrDefault()) ?? throw new InvalidOperationException();
         }
 
         public virtual Expression<Func<TContext, DbSet<TEntity>>> DataSet() => null;

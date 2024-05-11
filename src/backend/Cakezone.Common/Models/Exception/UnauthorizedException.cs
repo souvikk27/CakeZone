@@ -1,6 +1,6 @@
-﻿namespace CakeZone.Services.Product.Model.Exceptions
+﻿namespace CakeZone.Common.Models.Exception
 {
-    public class UnauthorizedException : Exception
+    public class UnauthorizedException : System.Exception
     {
         public const string message = "Unauthorized access to resource";
 
@@ -12,7 +12,7 @@
         {
         }
 
-        public UnauthorizedException(string resourceName, Exception innerException) : base($"{message} {resourceName}", innerException)
+        public UnauthorizedException(string resourceName, System.Exception innerException) : base($"{message} {resourceName}", innerException)
         {
         }
     }

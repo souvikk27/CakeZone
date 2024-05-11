@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace CakeZone.Services.Product.Repository
+namespace CakeZone.Common.Repository
 {
     public class RepositoryOptions<TContext> : IRepositoryOptions<TContext> where TContext : DbContext
     {

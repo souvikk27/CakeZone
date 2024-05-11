@@ -1,6 +1,6 @@
-﻿namespace CakeZone.Services.Product.Model.Exceptions
+﻿namespace CakeZone.Common.Models.Exception
 {
-    public class MutedApiException : Exception
+    public class MutedApiException : System.Exception
     {
         private const string MutedMessage = "An error was encountered. Please contact support.";
 
@@ -8,7 +8,7 @@
         {
         }
 
-        public MutedApiException(Exception innerException) : base(MutedMessage, innerException)
+        public MutedApiException(System.Exception innerException) : base(MutedMessage, innerException)
         {
         }
     }

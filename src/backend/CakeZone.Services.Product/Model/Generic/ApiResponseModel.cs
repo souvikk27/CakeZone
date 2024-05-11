@@ -1,4 +1,4 @@
-﻿namespace CakeZone.Common.Models.Generic
+﻿namespace CakeZone.Services.Product.Model.Generic
 {
     public class ApiResponseModel<T>
     {

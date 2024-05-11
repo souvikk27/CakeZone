@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace CakeZone.Common.Models.Error
+namespace CakeZone.Services.Product.Model.Error
 {
     public class ErrorDetails
     {

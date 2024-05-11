@@ -29,7 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cakezone.Common\Cakezone.Common.csproj" />
+    <Folder Include="Shared\Attributes\" />
+    <Folder Include="Shared\Categories\" />
   </ItemGroup>
 
 </Project>

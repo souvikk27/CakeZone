@@ -1,4 +1,4 @@
-namespace CakeZone.Common.Services;
+namespace CakeZone.Services.Product.Services;
 
 public class MetaData
 {

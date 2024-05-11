@@ -1,5 +1,5 @@
-﻿using CakeZone.Common.Models.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using ApiResponseStatusEnum = CakeZone.Services.Product.Model.Generic.ApiResponseStatusEnum;
 
 namespace CakeZone.Services.Product.Extension
 {
@@ -10,7 +10,7 @@ namespace CakeZone.Services.Product.Extension
 
         public static ObjectResult ToSuccessApiResult(object payload, string message = null, string statuscode = null) =>
             new OkObjectResult(
-                new ApiResponseModel<object>(
+                new Model.Generic.ApiResponseModel<object>(
                     ApiResponseStatusEnum.Success,
                     message ?? GenericSuccessMessage,
                     payload,
@@ -18,7 +18,7 @@ namespace CakeZone.Services.Product.Extension
 
         public static ObjectResult ToWarningApiResult(object payload, string message = null, string statuscode = null) =>
             new ObjectResult(
-                new ApiResponseModel<object>(
+                new Model.Generic.ApiResponseModel<object>(
                     ApiResponseStatusEnum.Warning,
                     message ?? GenericWarningMessage,
                     payload,
@@ -27,7 +27,7 @@ namespace CakeZone.Services.Product.Extension
 
         public static ObjectResult ToInfoApiResult(object payload, string message = null, string statuscode = null) =>
             new OkObjectResult(
-                new ApiResponseModel<object>(
+                new Model.Generic.ApiResponseModel<object>(
                     ApiResponseStatusEnum.Info,
                     message,
                     payload,
@@ -35,7 +35,7 @@ namespace CakeZone.Services.Product.Extension
 
         public static ObjectResult ToErrorApiResult(object payload, string message = null, string statuscode = null) =>
             new OkObjectResult(
-                new ApiResponseModel<object>(
+                new Model.Generic.ApiResponseModel<object>(
                     ApiResponseStatusEnum.Error,
                     message,
                     payload,

@@ -1,4 +1,4 @@
-﻿namespace CakeZone.Common.Models.Exception
+﻿namespace CakeZone.Services.Product.Model.Exception
 {
     public class MutedApiException : System.Exception
     {

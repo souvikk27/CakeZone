@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using CakeZone.Common.Models.Exception;
-using CakeZone.Common.Specification;
+﻿using System.Linq.Expressions;
+using CakeZone.Services.Product.Model.Exception;
+using CakeZone.Services.Product.Specification;
+using Microsoft.EntityFrameworkCore;
 
-namespace CakeZone.Common.Repository
+namespace CakeZone.Services.Product.Repository
 {
     public class RepositoryBase<TEntity, TContext> where TEntity : class where TContext : DbContext
     {

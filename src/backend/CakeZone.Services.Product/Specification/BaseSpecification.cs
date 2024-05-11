@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace CakeZone.Common.Specification
+namespace CakeZone.Services.Product.Specification
 {
     public abstract class BaseSpecification<T> : ISpecification<T>
     {

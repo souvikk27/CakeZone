@@ -1,14 +1,14 @@
-using Serilog;
-namespace Cakezone.Common.Logging;
+namespace CakeZone.Services.Product.Services.Logging;
 
 public class LoggerManager : ILoggerManager
 {
-    private readonly ILogger logger;
+    private readonly ILogger<LoggerManager> logger;
 
-    public LoggerManager(ILogger logger)
+    public LoggerManager(ILogger<LoggerManager> logger)
     {
         this.logger = logger;
     }
+
 
     public void LogInfo(string message)
     {
@@ -17,26 +17,26 @@ public class LoggerManager : ILoggerManager
 
     public void LogDebug(string message)
     {
-        logger.Debug(message);
+        logger.LogDebug(message);
     }
 
     public void LogError(string message)
     {
-        logger.Error(message);
+        logger.LogError(message);
     }
 
     public void LogException(Exception ex)
     {
-        logger.Error(ex, ex.Message);
+        logger.LogError(ex, ex.Message);
     }
 
     public void LogExcepting(Exception ex, string message)
     {
-        logger.Error(ex, message);
+        logger.LogError(ex, message);
     }
 
     public void LogWarning(string message)
     {
-        logger.Warning(message);
+        logger.LogWarning(message);
     }
 }

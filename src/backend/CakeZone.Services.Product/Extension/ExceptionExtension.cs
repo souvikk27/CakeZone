@@ -1,7 +1,9 @@
-﻿using Cakezone.Common.Logging;
-using CakeZone.Common.Models.Error;
-using CakeZone.Common.Models.Exception;
+﻿using CakeZone.Services.Product.Services.Logging;
 using Microsoft.AspNetCore.Diagnostics;
+using BadRequestApiException = CakeZone.Services.Product.Model.Exception.BadRequestApiException;
+using ErrorDetails = CakeZone.Services.Product.Model.Error.ErrorDetails;
+using MutedApiException = CakeZone.Services.Product.Model.Exception.MutedApiException;
+using NotFoundApiException = CakeZone.Services.Product.Model.Exception.NotFoundApiException;
 
 namespace CakeZone.Services.Product.Extension
 {

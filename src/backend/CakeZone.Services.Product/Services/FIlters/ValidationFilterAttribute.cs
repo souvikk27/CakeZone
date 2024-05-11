@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace CakeZone.Common.Services.FIlters;
+namespace CakeZone.Services.Product.Services.FIlters;
 
 public class ValidationFilterAttribute : IActionFilter
 {

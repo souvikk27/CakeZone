@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CakeZone.Webapp", "src\fron
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CakeZone.Services.Product", "src\backend\CakeZone.Services.Product\CakeZone.Services.Product.csproj", "{8B625B0A-F70D-4B53-B3FC-F0C3F1D16D3B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cakezone.Common", "src\backend\Cakezone.Common\Cakezone.Common.csproj", "{A6970FFC-1593-402C-A200-4B658D181E5E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{8B625B0A-F70D-4B53-B3FC-F0C3F1D16D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B625B0A-F70D-4B53-B3FC-F0C3F1D16D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B625B0A-F70D-4B53-B3FC-F0C3F1D16D3B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6970FFC-1593-402C-A200-4B658D181E5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6970FFC-1593-402C-A200-4B658D181E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6970FFC-1593-402C-A200-4B658D181E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6970FFC-1593-402C-A200-4B658D181E5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,7 +36,6 @@ Global
 		{F1AA9428-31CD-4D22-AAE6-18B25483163A} = {5E46D8CD-5490-425B-8B3B-6EEE62EE34CD}
 		{98D7D7B9-689B-4FA4-AF86-393CC608429B} = {F1AA9428-31CD-4D22-AAE6-18B25483163A}
 		{8B625B0A-F70D-4B53-B3FC-F0C3F1D16D3B} = {EF59349B-F641-4D22-9796-45B479FC191A}
-		{A6970FFC-1593-402C-A200-4B658D181E5E} = {EF59349B-F641-4D22-9796-45B479FC191A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {989A2992-31E0-4418-9305-3709398EC8A3}

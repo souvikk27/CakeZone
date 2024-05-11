@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace CakeZone.Common.Repository;
+namespace CakeZone.Services.Product.Repository;
 
 public interface IRepository<T>
 {

@@ -1,4 +1,4 @@
-namespace Cakezone.Common.Logging;
+namespace CakeZone.Services.Product.Services.Logging;
 
 public interface ILoggerManager
 {

@@ -1,4 +1,7 @@
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using CakeZone.Services.Product.Extension;
+using CakeZone.Services.Product.Repository.Category;
+using CakeZone.Services.Product.Shared.Categories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeZone.Services.Product.Controllers
@@ -7,36 +10,66 @@ namespace CakeZone.Services.Product.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        // GET: api/<CategoryController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
+        public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
         {
-            return new string[] { "value1", "value2" };
+            _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
-
-        // GET api/<CategoryController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<CategoryController>
+        
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto categoryDto)
         {
+            var category = _mapper.Map<Model.Category>(categoryDto);
+            await _categoryRepository.AddAsync(category);
+            await _categoryRepository.SaveAsync();
+            return ApiResponseExtension.ToSuccessApiResult(category, "catedory created", "200");
         }
-
-        // PUT api/<CategoryController>/5
+        
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryUpdateDto categoryDto)
         {
+            var category = await _categoryRepository.GetById(id);
+            if (category == null)
+            {
+                return ApiResponseExtension.ToErrorApiResult("Not Found","Requested category not found", "404");
+            }
+            category = _mapper.Map(categoryDto, category);
+            await _categoryRepository.UpdateAsync(category);
+            await _categoryRepository.SaveAsync();
+            return ApiResponseExtension.ToSuccessApiResult(category, "catedory updated", "204");
         }
 
-        // DELETE api/<CategoryController>/5
+        
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RemoveCategory(Guid id)
         {
+            var category = await _categoryRepository.GetById(id);
+            if (category == null)
+            {
+                return ApiResponseExtension.ToErrorApiResult("Not Found","Requested category not found", "404");
+            }
+            await _categoryRepository.Remove(category);
+            await _categoryRepository.SaveAsync();
+            return ApiResponseExtension.ToSuccessApiResult(category, "catedory deleted", "200");
         }
     }
 }

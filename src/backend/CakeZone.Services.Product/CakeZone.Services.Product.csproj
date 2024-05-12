@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="Shared\Attributes\" />
-    <Folder Include="Shared\Categories\" />
   </ItemGroup>
 
 </Project>

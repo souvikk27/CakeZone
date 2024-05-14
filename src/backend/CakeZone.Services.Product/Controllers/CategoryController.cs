@@ -12,12 +12,13 @@ namespace CakeZone.Services.Product.Controllers
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
+
         public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
-        
+
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -30,9 +31,9 @@ namespace CakeZone.Services.Product.Controllers
             var category = _mapper.Map<Model.Category>(categoryDto);
             await _categoryRepository.AddAsync(category);
             await _categoryRepository.SaveAsync();
-            return ApiResponseExtension.ToSuccessApiResult(category, "catedory created", "200");
+            return ApiResponseExtension.ToSuccessApiResult(category, "category created", "200");
         }
-        
+
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -40,20 +41,19 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryUpdateDto categoryDto)
+        public async Task<IActionResult> UpdateCategory([FromBody] CategoryUpdateDto categoryDto)
         {
-            var category = await _categoryRepository.GetById(id);
+            var category = await _categoryRepository.GetById(categoryDto.CategoryId);
             if (category == null)
             {
-                return ApiResponseExtension.ToErrorApiResult("Not Found","Requested category not found", "404");
+                return ApiResponseExtension.ToErrorApiResult("Not Found", "Requested category not found", "404");
             }
             category = _mapper.Map(categoryDto, category);
             await _categoryRepository.UpdateAsync(category);
             await _categoryRepository.SaveAsync();
-            return ApiResponseExtension.ToSuccessApiResult(category, "catedory updated", "204");
+            return ApiResponseExtension.ToSuccessApiResult(category, "category updated", "204");
         }
 
-        
         [HttpDelete("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -65,11 +65,11 @@ namespace CakeZone.Services.Product.Controllers
             var category = await _categoryRepository.GetById(id);
             if (category == null)
             {
-                return ApiResponseExtension.ToErrorApiResult("Not Found","Requested category not found", "404");
+                return ApiResponseExtension.ToErrorApiResult("Not Found", "Requested category not found", "404");
             }
             await _categoryRepository.Remove(category);
             await _categoryRepository.SaveAsync();
-            return ApiResponseExtension.ToSuccessApiResult(category, "catedory deleted", "200");
+            return ApiResponseExtension.ToSuccessApiResult(category, "category deleted", "200");
         }
     }
 }

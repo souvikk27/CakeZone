@@ -11,7 +11,6 @@ namespace CakeZone.Services.Product.Model
         public string DisplayType { get; set; }
         public string DataType { get; set; }
         public string UnitsOfMeasure { get; set; }
-        public string ListOfValues { get; set; }
         public string DataGovernanceFlags { get; set; }
         public string AttributeGroups { get; set; }
         public string InheritanceRules { get; set; }

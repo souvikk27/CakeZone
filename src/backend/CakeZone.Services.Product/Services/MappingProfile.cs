@@ -1,8 +1,8 @@
 using AutoMapper;
 using CakeZone.Services.Product.Shared;
+using CakeZone.Services.Product.Shared.Attributes;
 using CakeZone.Services.Product.Shared.Categories;
 using CakeZone.Services.Product.Shared.Products;
-using Microsoft.EntityFrameworkCore;
 
 namespace CakeZone.Services.Product.Services;
 
@@ -12,6 +12,12 @@ public class MappingProfile : Profile
     {
         CreateMap<ProductsDto, Model.Product>();
         CreateMap<ProductsUpdateDto, Model.Product>();
+
+        //Category
         CreateMap<CategoryCreateDto, Model.Category>();
+        CreateMap<CategoryUpdateDto, Model.Category>();
+
+        //Attribute
+        CreateMap<CreateAttributeDto, Model.Attribute>();
     }
 }

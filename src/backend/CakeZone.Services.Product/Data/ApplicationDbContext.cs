@@ -73,13 +73,13 @@ namespace CakeZone.Services.Product.Data
                         j.ToTable("ProductAttributes");
                         j.IndexerProperty<Guid>("AttributeId").HasColumnName("AttributeId");
                         j.IndexerProperty<Guid>("ProductId").HasColumnName("ProductId");
+                        j.Property<string>("Value").HasColumnName("Value");
                     });
 
             entity.HasMany(p => p.ProductImages)
-                .WithOne(pi => pi.Product) 
+                .WithOne(pi => pi.Product)
                 .HasForeignKey(pi => pi.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
-
         }
     }
 }

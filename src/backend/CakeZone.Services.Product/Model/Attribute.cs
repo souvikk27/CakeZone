@@ -6,10 +6,16 @@ namespace CakeZone.Services.Product.Model
     {
         [Key]
         public Guid AttributeId { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string Value { get; set; }
-        public Guid? ParentAttributeId { get; set; }
+        public string AttributeName { get; set; }
+        public string AttributeDefinition { get; set; }
+        public string DisplayType { get; set; }
+        public string DataType { get; set; }
+        public string UnitsOfMeasure { get; set; }
+        public string ListOfValues { get; set; }
+        public string DataGovernanceFlags { get; set; }
+        public string AttributeGroups { get; set; }
+        public string InheritanceRules { get; set; }
+        public string NavigationSequence { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }

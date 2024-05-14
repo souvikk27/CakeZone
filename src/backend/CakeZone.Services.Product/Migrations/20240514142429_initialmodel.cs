@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
 
 #nullable disable
 
 namespace CakeZone.Services.Product.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initialmodel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,9 +17,16 @@ namespace CakeZone.Services.Product.Migrations
                 columns: table => new
                 {
                     AttributeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AttributeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AttributeDefinition = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DisplayType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DataType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UnitsOfMeasure = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ListOfValues = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DataGovernanceFlags = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AttributeGroups = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InheritanceRules = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NavigationSequence = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),

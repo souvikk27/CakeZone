@@ -19,5 +19,6 @@ public class MappingProfile : Profile
 
         //Attribute
         CreateMap<CreateAttributeDto, Model.Attribute>();
+        CreateMap<UpdateAttributeDto, Model.Attribute>();
     }
 }

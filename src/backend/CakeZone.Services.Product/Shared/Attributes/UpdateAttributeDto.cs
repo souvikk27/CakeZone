@@ -2,10 +2,10 @@
 
 namespace CakeZone.Services.Product.Shared.Attributes
 {
-    public record CreateAttributeDto
+    public record UpdateAttributeDto
     {
-        public Guid AttributeId = Guid.NewGuid();
-
+        [Key]
+        public Guid AttributeId { get; set; }
         [Required(ErrorMessage = "Attribute name is required")]
         [StringLength(255, MinimumLength = 3, ErrorMessage = "Attribute name must be between 3 and 255 characters")]
         public string AttributeName { get; set; }
@@ -28,7 +28,8 @@ namespace CakeZone.Services.Product.Shared.Attributes
         public string InheritanceRules { get; set; }
         [Required(ErrorMessage = "Navigation sequence is required")]
         public string NavigationSequence { get; set; }
-
-        public DateTime CreatedAt = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt = DateTime.Now;
+        public bool IsDeleted = false;
     }
 }

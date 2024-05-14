@@ -3,7 +3,6 @@ using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Repository.Attribute;
 using CakeZone.Services.Product.Services.Logging;
 using CakeZone.Services.Product.Shared.Attributes;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeZone.Services.Product.Controllers
@@ -24,15 +23,24 @@ namespace CakeZone.Services.Product.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> GetAttributes()
         {
-            return new string[] { "value1", "value2" };
+            var attributes = await _attributeRepository.GetAll();
+            return Ok(attributes);
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> GetAttributeById(Guid id)
         {
-            return "value";
+            var attribute = await _attributeRepository.GetById(id);
+            return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute", "200");
+        }
+
+        [HttpGet("attribute/{name}")]
+        public async Task<IActionResult> GetAttributeByName(string name)
+        {
+            var attribute = await _attributeRepository.FindAsync(a => a.AttributeName == name);
+            return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute", "200");
         }
 
         [HttpPost]
@@ -51,13 +59,33 @@ namespace CakeZone.Services.Product.Controllers
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAttribute([FromBody] UpdateAttributeDto updateAttribute)
         {
+            var attribute = await _attributeRepository.GetById(updateAttribute.AttributeId);
+            attribute = _mapper.Map(updateAttribute, attribute);
+            await _attributeRepository.UpdateAsync(attribute);
+            await _attributeRepository.SaveAsync();
+            return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute updated", "204");
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RemoveAttribute(Guid id)
         {
+            var attribute = await _attributeRepository.GetById(id);
+            await _attributeRepository.Remove(attribute);
+            await _attributeRepository.SaveAsync();
+            return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute removed", "200");
         }
     }
 }

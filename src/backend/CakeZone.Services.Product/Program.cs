@@ -1,7 +1,4 @@
-﻿using CakeZone.Services.Product.Data;
-using CakeZone.Services.Product.Extension;
-using Microsoft.EntityFrameworkCore;
-using CakeZone.Services.Product.Controllers;
+﻿using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Services.Logging;
 
 var builder = WebApplication.CreateBuilder(args);

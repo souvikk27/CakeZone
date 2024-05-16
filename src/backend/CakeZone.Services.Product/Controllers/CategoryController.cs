@@ -1,6 +1,9 @@
 using AutoMapper;
 using CakeZone.Services.Product.Extension;
+using CakeZone.Services.Product.Model;
 using CakeZone.Services.Product.Repository.Category;
+using CakeZone.Services.Product.Services;
+using CakeZone.Services.Product.Services.FIlters;
 using CakeZone.Services.Product.Shared.Categories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +16,64 @@ namespace CakeZone.Services.Product.Controllers
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
+        /// <inheritdoc />
         public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCategories([FromQuery] CategoryParameter categoryParameter)
+        {
+            var page = categoryParameter.PageNumber;
+            var pageSize = categoryParameter.PageSize;
+            var categories= await _categoryRepository.GetAll();
+            var filteredCategories = categories.Where(c => (c.Name.Contains(categoryParameter.CategoryName) 
+                                                           || string.IsNullOrEmpty(categoryParameter.CategoryName))
+                                                           && (c.CreatedAt == categoryParameter.AddedOn)
+                                                           || c.CreatedAt == DateTime.MinValue).ToList();
+            var totalCount = filteredCategories.Count();
+            var metadata = new MetaData().Initialize(page, pageSize, totalCount);
+            metadata.AddResponseHeaders(Response);
+            var pagedList = PagedList<Category>.ToPagedList(filteredCategories, page, pageSize);
+            return Ok(pagedList);
+        }
+
+        [HttpGet("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCategoryById(Guid id)
+        {
+            var category = await _categoryRepository.GetById(id);
+            return ApiResponseExtension.ToSuccessApiResult(category, "category", "200");
+        }
+
+
+        [HttpGet("category")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCategoryByName([FromQuery] string categoryName)
+        {
+            var category = await _categoryRepository.FindAsync(c => c.Name == categoryName);
+            if (category.Count() == 0)
+            {
+                return ApiResponseExtension.ToErrorApiResult("Not Found", "requuested category not found", "404");
+            }
+            return ApiResponseExtension.ToSuccessApiResult(category, "category", "200");
+        }
+        
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -28,7 +83,7 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto categoryDto)
         {
-            var category = _mapper.Map<Model.Category>(categoryDto);
+            var category = _mapper.Map<Category>(categoryDto);
             await _categoryRepository.AddAsync(category);
             await _categoryRepository.SaveAsync();
             return ApiResponseExtension.ToSuccessApiResult(category, "category created", "200");

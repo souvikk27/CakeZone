@@ -31,17 +31,15 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCategories([FromQuery] CategoryParameter categoryParameter)
         {
-            var page = categoryParameter.PageNumber;
-            var pageSize = categoryParameter.PageSize;
             var categories= await _categoryRepository.GetAll();
-            var filteredCategories = categories.Where(c => (c.Name.Contains(categoryParameter.CategoryName) 
-                                                           || string.IsNullOrEmpty(categoryParameter.CategoryName))
-                                                           && (c.CreatedAt == categoryParameter.AddedOn)
-                                                           || c.CreatedAt == DateTime.MinValue).ToList();
-            var totalCount = filteredCategories.Count();
-            var metadata = new MetaData().Initialize(page, pageSize, totalCount);
+            var filteredcategory = categories.Where(attribute =>
+                                     (categoryParameter.AddedOn == DateTime.MinValue || categoryParameter.AddedOn == attribute.CreatedAt) &&
+                                     (string.IsNullOrEmpty(categoryParameter.CategoryName) || categoryParameter.CategoryName == attribute.Name))
+                                     .ToList();
+
+            var metadata = new MetaData().Initialize(categoryParameter.PageNumber, categoryParameter.PageSize, filteredcategory.Count());
             metadata.AddResponseHeaders(Response);
-            var pagedList = PagedList<Category>.ToPagedList(filteredCategories, page, pageSize);
+            var pagedList = PagedList<Category>.ToPagedList(filteredcategory, categoryParameter.PageNumber, categoryParameter.PageSize);
             return Ok(pagedList);
         }
 

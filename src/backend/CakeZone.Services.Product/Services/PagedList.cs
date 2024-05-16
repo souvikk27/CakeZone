@@ -1,3 +1,4 @@
+
 namespace CakeZone.Services.Product.Services;
 
 public class PagedList<T> : List<T>

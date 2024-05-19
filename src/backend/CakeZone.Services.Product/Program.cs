@@ -28,4 +28,6 @@ app.ConfigureExceptionHandler(app.Services.GetRequiredService<ILoggerManager>())
 
 app.MapControllers();
 
+app.UseStaticFiles();
+
 await app.RunAsync();

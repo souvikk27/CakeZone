@@ -2,6 +2,6 @@
 
 public class CategoryParameter : RequestParameter
 {
-    public string CategoryName { get; set; }
+    public string? CategoryName { get; set; }
     public DateTime AddedOn { get; set; }
 }

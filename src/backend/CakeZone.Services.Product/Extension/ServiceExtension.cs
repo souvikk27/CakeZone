@@ -1,7 +1,9 @@
 ﻿using CakeZone.Services.Product.Data;
 using CakeZone.Services.Product.Repository.Attribute;
 using CakeZone.Services.Product.Repository.Category;
+using CakeZone.Services.Product.Repository.Image;
 using CakeZone.Services.Product.Repository.Product;
+using CakeZone.Services.Product.Services.Image;
 using CakeZone.Services.Product.Services.Logging;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,8 +28,14 @@ namespace CakeZone.Services.Product.Extension
         {
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IAttributeRepository, AttributeRepository>();
             services.AddScoped(typeof(Repository.IRepositoryOptions<>), typeof(Repository.RepositoryOptions<>));
+        }
+
+        public static void AddImageService(this IServiceCollection services)
+        {
+            services.AddTransient<IImageService, ImageService>();
         }
     }
 }

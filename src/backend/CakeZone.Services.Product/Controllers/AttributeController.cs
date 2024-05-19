@@ -1,6 +1,8 @@
 using AutoMapper;
 using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Repository.Attribute;
+using CakeZone.Services.Product.Services;
+using CakeZone.Services.Product.Services.FIlters;
 using CakeZone.Services.Product.Services.Logging;
 using CakeZone.Services.Product.Shared.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -23,21 +25,44 @@ namespace CakeZone.Services.Product.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAttributes()
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAttributes([FromQuery] AttributeParameter attributeParameter)
         {
             var attributes = await _attributeRepository.GetAll();
-            return Ok(attributes);
+
+            var filteredAttribute = attributes.Where(attribute =>
+                                     (attributeParameter.CreatedOn == DateTime.MinValue || attributeParameter.CreatedOn == attribute.CreatedAt) &&
+                                     (string.IsNullOrEmpty(attributeParameter.AttributeName) || attributeParameter.AttributeName == attribute.AttributeName))
+                                     .ToList();
+            var metadata = new MetaData().Initialize(attributeParameter.PageNumber, attributeParameter.PageSize, filteredAttribute.Count());
+            metadata.AddResponseHeaders(Response);
+            var pagedList = PagedList<Model.Attribute>.ToPagedList(filteredAttribute, attributeParameter.PageNumber, attributeParameter.PageSize);
+            return Ok(pagedList);
         }
 
         [HttpGet("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAttributeById(Guid id)
         {
             var attribute = await _attributeRepository.GetById(id);
             return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute", "200");
         }
 
-        [HttpGet("attribute/{name}")]
-        public async Task<IActionResult> GetAttributeByName(string name)
+        [HttpGet("attribute")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAttributeByName([FromQuery] string name)
         {
             var attribute = await _attributeRepository.FindAsync(a => a.AttributeName == name);
             return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute", "200");

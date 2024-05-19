@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CakeZone.Services.Product.Shared
+namespace CakeZone.Services.Product.Shared.Products
 {
-    public class ProductsDto
+    public record ProductsDto
     {
         public Guid ProductId = Guid.NewGuid();
 

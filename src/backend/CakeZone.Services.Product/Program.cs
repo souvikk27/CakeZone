@@ -11,6 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDbContext(configuration);
 builder.Services.ConfigureMappings();
 builder.Services.ConfigureRepositories();
+builder.Services.AddImageService();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

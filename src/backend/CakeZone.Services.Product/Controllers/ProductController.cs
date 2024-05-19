@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using AutoMapper;
+﻿using AutoMapper;
 using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Repository.Image;
 using CakeZone.Services.Product.Repository.Product;
@@ -7,6 +6,7 @@ using CakeZone.Services.Product.Services.Image;
 using CakeZone.Services.Product.Services.Logging;
 using CakeZone.Services.Product.Shared.Products;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CakeZone.Services.Product.Controllers
 {
@@ -20,6 +20,7 @@ namespace CakeZone.Services.Product.Controllers
         private readonly IImageService _imageService;
         private readonly IProductImageRepository _productImageRepository;
 
+        /// <inheritdoc />
         public ProductController(ILoggerManager logger,
             IProductRepository productRepository,
             IMapper mapper,
@@ -43,7 +44,7 @@ namespace CakeZone.Services.Product.Controllers
         [SuppressMessage("ReSharper.DPA", "DPA0011: High execution time of MVC action", MessageId = "time: 876ms")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto productCreateDto)
         {
-            if (productCreateDto.Products == null || productCreateDto.MainImage == null)
+            if (productCreateDto.Products == null || productCreateDto.MainImageUrl == null)
             {
                 return ApiResponseExtension.ToErrorApiResult("Product data or main image file is missing.", "Bad Request", "400");
             }
@@ -55,8 +56,8 @@ namespace CakeZone.Services.Product.Controllers
 
             var productImages = await ImageHelper.CreateProductImagesAsync(_imageService,
                 product.ProductId,
-                productCreateDto.MainImage,
-                productCreateDto.AdditionalImages);
+                productCreateDto.MainImageUrl,
+                productCreateDto.AdditionalImageUrls);
 
             foreach (var productImage in productImages)
             {

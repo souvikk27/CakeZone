@@ -4,7 +4,10 @@ namespace CakeZone.Services.Product.Services.Image
 {
     public static class ImageHelper
     {
-        public static async Task<List<ProductImage>> CreateProductImagesAsync(IImageService imageService, Guid productId, IFormFile mainImage, List<IFormFile> additionalImages)
+        public static async Task<List<ProductImage>> CreateProductImagesAsync(IImageService imageService,
+            Guid productId,
+            string mainImage,
+            List<string> additionalImages)
         {
             var productImages = new List<ProductImage>();
 

@@ -9,21 +9,19 @@
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<string> SaveImageAsync(IFormFile imageFile)
+        public async Task<string> SaveImageAsync(string imagePath)
         {
+
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/cake/");
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
-
-            var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(imageFile.FileName);
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(imagePath);
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-            await using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(fileStream);
-            }
+            // Copy the image file
+            await Task.Run(() => System.IO.File.Create(filePath));
 
             return "/images/cake/" + uniqueFileName;
         }

@@ -8,7 +8,7 @@ var configuration = builder.Configuration;
 builder.Services.ConfigureLogging();
 builder.Services.AddControllers()
     .AddJsonOptions(x =>
-   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDbContext(configuration);

@@ -2,11 +2,12 @@
 using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Repository.Image;
 using CakeZone.Services.Product.Repository.Product;
+using CakeZone.Services.Product.Services;
+using CakeZone.Services.Product.Services.FIlters;
 using CakeZone.Services.Product.Services.Image;
 using CakeZone.Services.Product.Services.Logging;
 using CakeZone.Services.Product.Shared.Products;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.CodeAnalysis;
 
 namespace CakeZone.Services.Product.Controllers
 {
@@ -35,6 +36,27 @@ namespace CakeZone.Services.Product.Controllers
         }
 
         [HttpGet]
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAllProducts([FromQuery] ProductParameter productParameter)
+        {
+            var products = await _productRepository.GetAll();
+            IEnumerable<ProductViewDto> productsView = _mapper.Map<IEnumerable<ProductViewDto>>(products);
+            var filteredProduct = productsView.Where(product =>
+                                     (productParameter.AddedOn == DateTime.MinValue || productParameter.AddedOn == product.CreatedAt) &&
+                                     (string.IsNullOrEmpty(productParameter.ProductName) || productParameter.ProductName == product.Name))
+                                     .ToList();
+            var metadata = new MetaData().Initialize(productParameter.PageNumber, productParameter.PageSize, filteredProduct.Count());
+            metadata.AddResponseHeaders(Response);
+            var pagedList = PagedList<ProductViewDto>.ToPagedList(filteredProduct, productParameter.PageNumber, productParameter.PageSize);
+            return Ok(pagedList);
+        }
+
+        [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,7 +68,24 @@ namespace CakeZone.Services.Product.Controllers
             var product = await _productRepository.FindAsync(p => p.Name.Equals(productName));
             if (!product.Any())
             {
-                return ApiResponseExtension.ToErrorApiResult("Not Found", $"Product with {productName} not found", "404");
+                return ApiResponseExtension.ToErrorApiResult("Not Found", $"Product with name {productName} not found", "404");
+            }
+            return ApiResponseExtension.ToSuccessApiResult(product, "Product");
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("product/sku")]
+        public async Task<IActionResult> GetProductBySku([FromQuery] string sku)
+        {
+            var product = await _productRepository.FindAsync(p => p.Sku.Equals(sku));
+            if (!product.Any())
+            {
+                return ApiResponseExtension.ToErrorApiResult("Not Found", $"Product with sku {sku} not found", "404");
             }
             return ApiResponseExtension.ToSuccessApiResult(product, "Product");
         }
@@ -95,6 +134,18 @@ namespace CakeZone.Services.Product.Controllers
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             var product = await _productRepository.GetById(id);
+            var productImage = await _productImageRepository.FindAsync(p => p.ProductId == id);
+
+            string location = productImage.FirstOrDefault().Url;
+
+            var rtval = await _imageService.RemoveImageAsync(location);
+
+            if (rtval)
+            {
+                _logger.LogInfo("Image found for product removing..");
+                await _productImageRepository.Remove(productImage.FirstOrDefault());
+                await _productImageRepository.SaveAsync();
+            }
             await _productRepository.Remove(product);
             await _productRepository.SaveAsync();
             return ApiResponseExtension.ToSuccessApiResult(product, "product removed", "200");

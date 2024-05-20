@@ -32,9 +32,9 @@ namespace CakeZone.Services.Product.Controllers
         public async Task<IActionResult> GetCategories([FromQuery] CategoryParameter categoryParameter)
         {
             var categories= await _categoryRepository.GetAll();
-            var filteredcategory = categories.Where(attribute =>
-                                     (categoryParameter.AddedOn == DateTime.MinValue || categoryParameter.AddedOn == attribute.CreatedAt) &&
-                                     (string.IsNullOrEmpty(categoryParameter.CategoryName) || categoryParameter.CategoryName == attribute.Name))
+            var filteredcategory = categories.Where(category =>
+                                     (categoryParameter.AddedOn == DateTime.MinValue || categoryParameter.AddedOn == category.CreatedAt) &&
+                                     (string.IsNullOrEmpty(categoryParameter.CategoryName) || categoryParameter.CategoryName == category.Name))
                                      .ToList();
 
             var metadata = new MetaData().Initialize(categoryParameter.PageNumber, categoryParameter.PageSize, filteredcategory.Count());

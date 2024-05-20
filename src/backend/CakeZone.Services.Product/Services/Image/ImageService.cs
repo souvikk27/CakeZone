@@ -31,5 +31,16 @@
 
             return "/images/cake/" + uniqueFileName;
         }
+
+        public async Task<bool> RemoveImageAsync(string filePath)
+        {
+            var uploadesFolder = _webHostEnvironment.WebRootPath + filePath;
+            if (File.Exists(uploadesFolder))
+            {
+                await Task.Run(() => File.Delete(uploadesFolder));
+                return true;
+            }
+            return false;
+        }
     }
 }

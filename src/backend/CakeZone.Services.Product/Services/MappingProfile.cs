@@ -12,6 +12,7 @@ public class MappingProfile : Profile
     {
         CreateMap<ProductsDto, Model.Product>();
         CreateMap<ProductsUpdateDto, Model.Product>();
+        CreateMap<Model.Product, ProductViewDto>();
 
         //Category
         CreateMap<CategoryCreateDto, Model.Category>();

@@ -7,7 +7,7 @@
     <UserSecretsId>e3776468-7c51-40a3-837f-dd8922b1bce8</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
-	  <NoWarn>8618;8603;8625;</NoWarn>
+	  <NoWarn>8618;8603;8625;8602;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

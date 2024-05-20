@@ -18,5 +18,10 @@ namespace CakeZone.Services.Product.Repository.Product
         {
             return await Context.Products.Include(i => i.ProductImages).Where(p => p.Sku == sku).ToListAsync();
         }
+
+        public async Task<bool> AddProductsWithParameters()
+        {
+
+        }
     }
 }

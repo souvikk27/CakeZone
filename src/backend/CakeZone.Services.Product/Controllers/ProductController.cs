@@ -90,6 +90,14 @@ namespace CakeZone.Services.Product.Controllers
             return ApiResponseExtension.ToSuccessApiResult(product, "Product");
         }
 
+        [HttpGet]
+        [Route("category")]
+        public async Task<IActionResult> GetProductWithCategories()
+        {
+            var products = await _productRepository.GetProductsWithCategories();
+            return Ok(products);
+        }
+
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -142,10 +150,10 @@ namespace CakeZone.Services.Product.Controllers
 
             if (rtval)
             {
-                _logger.LogInfo("Image found for product removing..");
-                await _productImageRepository.Remove(productImage.FirstOrDefault());
-                await _productImageRepository.SaveAsync();
+                _logger.LogInfo("Image found and removed from product");
             }
+            await _productImageRepository.Remove(productImage.FirstOrDefault());
+            await _productImageRepository.SaveAsync();
             await _productRepository.Remove(product);
             await _productRepository.SaveAsync();
             return ApiResponseExtension.ToSuccessApiResult(product, "product removed", "200");

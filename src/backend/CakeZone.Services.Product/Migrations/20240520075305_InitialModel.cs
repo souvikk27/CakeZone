@@ -15,7 +15,7 @@ namespace CakeZone.Services.Product.Migrations
                 name: "Attributes",
                 columns: table => new
                 {
-                    AttributeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AttributeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AttributeDefinition = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DisplayType = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -32,14 +32,14 @@ namespace CakeZone.Services.Product.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Attributes", x => x.AttributeId);
+                    table.PrimaryKey("PK_Attributes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ParentCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -49,12 +49,12 @@ namespace CakeZone.Services.Product.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Categories_Categories_ParentCategoryId",
                         column: x => x.ParentCategoryId,
                         principalTable: "Categories",
-                        principalColumn: "CategoryId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -62,7 +62,7 @@ namespace CakeZone.Services.Product.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newid()"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sku = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -74,7 +74,7 @@ namespace CakeZone.Services.Product.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products_5793275AF5B5B6D7", x => x.ProductId);
+                    table.PrimaryKey("PK_Products_5793275AF5B5B6D7", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,12 +92,12 @@ namespace CakeZone.Services.Product.Migrations
                         name: "FK_Attributes_5683275AF5B5B6D7",
                         column: x => x.AttributeId,
                         principalTable: "Attributes",
-                        principalColumn: "AttributeId");
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Products_5793275AF5B5B69F",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "ProductId");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -114,12 +114,12 @@ namespace CakeZone.Services.Product.Migrations
                         name: "FK_Category_G798FB98899322",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "CategoryId");
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Products_5793275AF5B5B6D7",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "ProductId");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -140,10 +140,10 @@ namespace CakeZone.Services.Product.Migrations
                 {
                     table.PrimaryKey("PK_ProductImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductImages_Products_ProductId",
+                        name: "FK_Product_Images_47367367459808",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "ProductId");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

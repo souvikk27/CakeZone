@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CakeZone.Services.Product.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240514162940_InitialModel")]
+    [Migration("20240520075305_InitialModel")]
     partial class InitialModel
     {
         /// <inheritdoc />
@@ -27,7 +27,7 @@ namespace CakeZone.Services.Product.Migrations
 
             modelBuilder.Entity("CakeZone.Services.Product.Model.Attribute", b =>
                 {
-                    b.Property<Guid>("AttributeId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -79,14 +79,14 @@ namespace CakeZone.Services.Product.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("AttributeId");
+                    b.HasKey("Id");
 
                     b.ToTable("Attributes");
                 });
 
             modelBuilder.Entity("CakeZone.Services.Product.Model.Category", b =>
                 {
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -109,7 +109,7 @@ namespace CakeZone.Services.Product.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ParentCategoryId");
 
@@ -118,10 +118,10 @@ namespace CakeZone.Services.Product.Migrations
 
             modelBuilder.Entity("CakeZone.Services.Product.Model.Product", b =>
                 {
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("ProductId")
+                        .HasColumnName("Id")
                         .HasDefaultValueSql("newid()");
 
                     b.Property<DateTime>("CreatedAt")
@@ -151,7 +151,7 @@ namespace CakeZone.Services.Product.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ProductId")
+                    b.HasKey("Id")
                         .HasName("PK_Products_5793275AF5B5B6D7");
 
                     b.ToTable("Products", (string)null);
@@ -249,7 +249,8 @@ namespace CakeZone.Services.Product.Migrations
                     b.HasOne("CakeZone.Services.Product.Model.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Product_Images_47367367459808");
 
                     b.Navigation("Product");
                 });

@@ -6,8 +6,8 @@ namespace CakeZone.Services.Product.Services.Image
     {
         public static async Task<List<ProductImage>> CreateProductImagesAsync(IImageService imageService,
             Guid productId,
-            string mainImage,
-            List<string> additionalImages)
+            IFormFile mainImage,
+            List<IFormFile> additionalImages)
         {
             var productImages = new List<ProductImage>();
 

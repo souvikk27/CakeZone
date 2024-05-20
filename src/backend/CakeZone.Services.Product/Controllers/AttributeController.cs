@@ -65,6 +65,10 @@ namespace CakeZone.Services.Product.Controllers
         public async Task<IActionResult> GetAttributeByName([FromQuery] string name)
         {
             var attribute = await _attributeRepository.FindAsync(a => a.AttributeName == name);
+            if (!attribute.Any())
+            {
+                return ApiResponseExtension.ToErrorApiResult("Not Found", "requuested attribute not found", "404");
+            }
             return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute", "200");
         }
 

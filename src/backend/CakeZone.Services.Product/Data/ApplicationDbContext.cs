@@ -33,11 +33,11 @@ namespace CakeZone.Services.Product.Data
         {
             entity.ToTable("Products");
 
-            entity.HasKey(e => e.ProductId).HasName("PK_Products_5793275AF5B5B6D7");
+            entity.HasKey(e => e.Id).HasName("PK_Products_5793275AF5B5B6D7");
 
-            entity.Property(e => e.ProductId)
+            entity.Property(e => e.Id)
                 .HasDefaultValueSql("newid()")
-                .HasColumnName("ProductId");
+                .HasColumnName("Id");
 
             entity.HasMany(c => c.Categories)
                 .WithMany(p => p.Products)
@@ -79,7 +79,8 @@ namespace CakeZone.Services.Product.Data
             entity.HasMany(p => p.ProductImages)
                 .WithOne(pi => pi.Product)
                 .HasForeignKey(pi => pi.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Product_Images_47367367459808");
         }
     }
 }

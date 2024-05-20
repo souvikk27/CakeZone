@@ -34,28 +34,47 @@ namespace CakeZone.Services.Product.Controllers
             _productImageRepository = productImageRepository;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Produces("application/json")]
-        [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [SuppressMessage("ReSharper.DPA", "DPA0011: High execution time of MVC action", MessageId = "time: 876ms")]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto productCreateDto)
+        [Route("product")]
+        public async Task<IActionResult> GetProductByName([FromQuery] string productName)
+        {
+            var product = await _productRepository.FindAsync(p => p.Name.Equals(productName));
+            if (!product.Any())
+            {
+                return ApiResponseExtension.ToErrorApiResult("Not Found", $"Product with {productName} not found", "404");
+            }
+            return ApiResponseExtension.ToSuccessApiResult(product, "Product");
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> CreateProduct([FromForm] ProductCreateDto productCreateDto)
         {
             if (productCreateDto.Products == null || productCreateDto.MainImageUrl == null)
             {
-                return ApiResponseExtension.ToErrorApiResult("Product data or main image file is missing.", "Bad Request", "400");
+                return ApiResponseExtension.ToErrorApiResult("Bad Request", "Product data or main image file is missing.", "400");
             }
 
-            var product = _mapper.Map<Model.Product>(productCreateDto.Products);
+            var productExist = await _productRepository.FindAsync(p => p.Name == productCreateDto.Products.Name);
 
+            if (productExist.Any())
+            {
+                return ApiResponseExtension.ToWarningApiResult("Bad Request", "Requested product with name already exists!", "400");
+            }
+            var product = _mapper.Map<Model.Product>(productCreateDto.Products);
             await _productRepository.AddAsync(product);
             await _productRepository.SaveAsync();
-
             var productImages = await ImageHelper.CreateProductImagesAsync(_imageService,
-                product.ProductId,
+                product.Id,
                 productCreateDto.MainImageUrl,
                 productCreateDto.AdditionalImageUrls);
 
@@ -64,7 +83,6 @@ namespace CakeZone.Services.Product.Controllers
                 await _productImageRepository.AddAsync(productImage);
             }
             await _productImageRepository.SaveAsync();
-
             return ApiResponseExtension.ToSuccessApiResult(product, "Product created", "200");
         }
 
@@ -74,7 +92,6 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [SuppressMessage("ReSharper.DPA", "DPA0011: High execution time of MVC action", MessageId = "time: 517ms")]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             var product = await _productRepository.GetById(id);

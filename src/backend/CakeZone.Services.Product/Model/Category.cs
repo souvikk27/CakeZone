@@ -4,7 +4,7 @@ namespace CakeZone.Services.Product.Model
 {
     public partial class Category
     {
-        [Key] public Guid CategoryId { get; set; }
+        [Key] public Guid Id { get; set; }
         
         public string Name { get; set; }
         public Guid? ParentCategoryId { get; set; }

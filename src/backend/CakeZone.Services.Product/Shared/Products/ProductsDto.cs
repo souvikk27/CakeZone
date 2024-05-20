@@ -4,7 +4,7 @@ namespace CakeZone.Services.Product.Shared.Products
 {
     public record ProductsDto
     {
-        public Guid ProductId = Guid.NewGuid();
+        public Guid Id = Guid.NewGuid();
 
         [Required(ErrorMessage = "Product name is required!")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Product name must be between 5 and 100 characters")]

@@ -10,5 +10,5 @@ public class AttributeRepository : RepositoryBase<Model.Attribute, ApplicationDb
     {
     }
     public override Expression<Func<ApplicationDbContext, DbSet<Model.Attribute>>> DataSet() => o => o.Attributes;
-    public override Expression<Func<Model.Attribute, object>> Key() => o => o.AttributeId;
+    public override Expression<Func<Model.Attribute, object>> Key() => o => o.Id;
 }

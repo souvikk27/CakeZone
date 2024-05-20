@@ -5,7 +5,7 @@ namespace CakeZone.Services.Product.Model
     public class Attribute
     {
         [Key]
-        public Guid AttributeId { get; set; }
+        public Guid Id { get; set; }
         public string AttributeName { get; set; }
         public string AttributeDefinition { get; set; }
         public string DisplayType { get; set; }

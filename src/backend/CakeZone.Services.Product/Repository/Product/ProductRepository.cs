@@ -12,6 +12,6 @@ namespace CakeZone.Services.Product.Repository.Product
         }
 
         public override Expression<Func<ApplicationDbContext, DbSet<Model.Product>>> DataSet() => o => o.Products;
-        public override Expression<Func<Model.Product, object>> Key() => o => o.ProductId;
+        public override Expression<Func<Model.Product, object>> Key() => o => o.Id;
     }
 }

@@ -1,17 +1,21 @@
 ﻿using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Services.Logging;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.ConfigureLogging();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDbContext(configuration);
 builder.Services.ConfigureMappings();
 builder.Services.ConfigureRepositories();
 builder.Services.AddImageService();
+builder.Services.ConfigureCors();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

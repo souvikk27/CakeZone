@@ -82,20 +82,12 @@ namespace CakeZone.Services.Product.Controllers
         [Route("product/sku")]
         public async Task<IActionResult> GetProductBySku([FromQuery] string sku)
         {
-            var product = await _productRepository.FindAsync(p => p.Sku.Equals(sku));
+            var product = await _productRepository.GetProductsWithImages(sku);
             if (!product.Any())
             {
                 return ApiResponseExtension.ToErrorApiResult("Not Found", $"Product with sku {sku} not found", "404");
             }
             return ApiResponseExtension.ToSuccessApiResult(product, "Product");
-        }
-
-        [HttpGet]
-        [Route("category")]
-        public async Task<IActionResult> GetProductWithCategories()
-        {
-            var products = await _productRepository.GetProductsWithCategories();
-            return Ok(products);
         }
 
         [HttpPost]

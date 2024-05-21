@@ -1,0 +1,28 @@
+﻿version: '3.9'
+
+services:
+  webapp:
+    image: cakezone-product-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__SqlConnection=Server=db;Database=CakeozoneProductsApi;User=sa;Password=Sou@2345;
+    ports:
+      - "4587:8080"
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "Sou@2345"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlvolume:/var/opt/mssql
+
+volumes:
+  sqlvolume:

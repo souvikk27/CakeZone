@@ -135,12 +135,12 @@ namespace CakeZone.Services.Product.Controllers
         {
             var product = await _productRepository.GetById(id);
             var productImage = await _productImageRepository.FindAsync(p => p.ProductId == id);
+            
+            var location = productImage.FirstOrDefault().Url;
 
-            string location = productImage.FirstOrDefault().Url;
+            var result = await _imageService.RemoveImageAsync(location);
 
-            var rtval = await _imageService.RemoveImageAsync(location);
-
-            if (rtval)
+            if (result)
             {
                 _logger.LogInfo("Image found and removed from product");
             }

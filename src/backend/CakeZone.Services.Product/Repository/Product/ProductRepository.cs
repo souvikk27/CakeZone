@@ -55,14 +55,15 @@ namespace CakeZone.Services.Product.Repository.Product
 
                         await connection.ExecuteAsync(productInsertQuery, parameters, transaction: transaction);
 
-                        var categoryQuery = $@"INSERT INTO [dbo].[ProductCategories] (ProductId, CategoryId) VALUES ('{product.Id}', '{categoryId}')";
+                        var categoryQuery = $@"INSERT INTO [dbo].[ProductCategories] (ProductId, CategoryId)
+                            VALUES ('{product.Id}', '{categoryId}')";
 
                         await connection.ExecuteAsync(categoryQuery, transaction: transaction);
 
                         foreach (var attribute in attributeProducts)
                         {
-                            var attributiveQuery = $@"INSERT INTO [dbo].[ProductAttributes] (AttributeId, ProductId, Value) 
-                                VALUES ('{attribute.AttributeId}', '{product.Id}', {attribute.Value})";
+                            var attributiveQuery = $@"INSERT INTO [dbo].[ProductAttributes] (AttributeId, ProductId, Value)
+                                VALUES ('{attribute.AttributeId}', '{product.Id}', '{attribute.Value}')";
                             await connection.ExecuteAsync(attributiveQuery, transaction: transaction);
                         }
 

@@ -10,7 +10,7 @@ services:
       - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__SqlConnection=Server=db;Database=CakeozoneProductsApi;User=sa;Password=Sou@2345;
+      - ConnectionStrings__SqlConnection=Server=db;Database=CakeozoneProductsApi;User=sa;Password=Sou@2345;TrustServerCertificate=true;
     ports:
       - "4587:8080"
 

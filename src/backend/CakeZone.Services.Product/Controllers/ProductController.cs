@@ -96,13 +96,8 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CreateProduct([FromForm] ProductCreateDto productCreateDto)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto productCreateDto)
         {
-            if (productCreateDto.Products == null || productCreateDto.MainImageUrl == null)
-            {
-                return ApiResponseExtension.ToErrorApiResult("Bad Request", "Product data or main image file is missing.", "400");
-            }
-
             var productExist = await _productRepository.FindAsync(p => p.Name == productCreateDto.Products.Name);
 
             if (productExist.Any())
@@ -110,18 +105,8 @@ namespace CakeZone.Services.Product.Controllers
                 return ApiResponseExtension.ToWarningApiResult("Bad Request", "Requested product with name already exists!", "400");
             }
             var product = _mapper.Map<Model.Product>(productCreateDto.Products);
-            await _productRepository.AddAsync(product);
+            await _productRepository.AddProductsWithParametersAsync(product, productCreateDto.CategoryId, productCreateDto.AttributeProduct);
             await _productRepository.SaveAsync();
-            var productImages = await ImageHelper.CreateProductImagesAsync(_imageService,
-                product.Id,
-                productCreateDto.MainImageUrl,
-                productCreateDto.AdditionalImageUrls);
-
-            foreach (var productImage in productImages)
-            {
-                await _productImageRepository.AddAsync(productImage);
-            }
-            await _productImageRepository.SaveAsync();
             return ApiResponseExtension.ToSuccessApiResult(product, "Product created", "200");
         }
 

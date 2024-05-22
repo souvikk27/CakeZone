@@ -1,7 +1,9 @@
 ﻿using CakeZone.Services.Product.Data;
+using CakeZone.Services.Product.Shared.Attributes;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System.Linq.Expressions;
 
 namespace CakeZone.Services.Product.Repository.Product
@@ -21,9 +23,10 @@ namespace CakeZone.Services.Product.Repository.Product
                 .Where(p => p.Sku == sku)
                 .ToListAsync();
 
-        public async Task<bool> AddProductsWithParameters(Model.Product product, Guid categoryId, IEnumerable<Guid> attributeIds)
+        public async Task<bool> AddProductsWithParametersAsync(Model.Product product, Guid categoryId, IEnumerable<AttributeProductDto> attributeProducts)
         {
             var connectionString = Context.Database.GetConnectionString();
+
             await using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
@@ -33,9 +36,9 @@ namespace CakeZone.Services.Product.Repository.Product
                     try
                     {
                         var productInsertQuery =
-                            @" INSERT INTO Products (Id, Name, Sku, Description, Price, 
+                            @" INSERT INTO Products (Id, Name, Sku, Description, Price,
                                         CreatedAt, UpdatedAt, IsDeleted, DeletedAt)
-                                        VALUES (@Id, @Name, @Sku, @Description, @Price, 
+                                        VALUES (@Id, @Name, @Sku, @Description, @Price,
                                         @CreatedAt, @UpdatedAt, @IsDeleted, @DeletedAt)";
                         var parameters = new
                         {
@@ -52,14 +55,16 @@ namespace CakeZone.Services.Product.Repository.Product
 
                         await connection.ExecuteAsync(productInsertQuery, parameters, transaction: transaction);
 
-                        foreach (var attributiveQuery in attributeIds.Select(attributeId =>
-                                     @$"INSERT INTO [dbo].[ProductAttributes] VALUES ({product.Id}, {attributeId})"))
+                        var categoryQuery = $@"INSERT INTO [dbo].[ProductCategories] (ProductId, CategoryId) VALUES ('{product.Id}', '{categoryId}')";
+
+                        await connection.ExecuteAsync(categoryQuery, transaction: transaction);
+
+                        foreach (var attribute in attributeProducts)
                         {
+                            var attributiveQuery = $@"INSERT INTO [dbo].[ProductAttributes] (AttributeId, ProductId, Value) 
+                                VALUES ('{attribute.AttributeId}', '{product.Id}', {attribute.Value})";
                             await connection.ExecuteAsync(attributiveQuery, transaction: transaction);
                         }
-
-                        var categoryQuery = @$"INSERT INTO [dbo].[ProductCategories] VALUES ({product.Id}, {categoryId})";
-                        await connection.ExecuteAsync(categoryQuery, transaction: transaction);
 
                         transaction.Commit();
                     }

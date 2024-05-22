@@ -16,7 +16,10 @@ builder.Services.ConfigureMappings();
 builder.Services.ConfigureRepositories();
 builder.Services.AddImageService();
 builder.Services.ConfigureCors();
+
 var app = builder.Build();
+
+app.UseAutoMigrationBuilder();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

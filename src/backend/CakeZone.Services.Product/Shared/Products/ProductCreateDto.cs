@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CakeZone.Services.Product.Shared.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace CakeZone.Services.Product.Shared.Products
 {
@@ -6,9 +7,10 @@ namespace CakeZone.Services.Product.Shared.Products
     {
         public ProductsDto Products { get; set; }
 
-        [Required(ErrorMessage = "Please upload the main image.")]
-        public IFormFile MainImageUrl { get; set; }
+        [Required]
+        public Guid CategoryId { get; set; }
 
-        public List<IFormFile>? AdditionalImageUrls { get; set; }
+        [Required]
+        public List<AttributeProductDto> AttributeProduct { get; set; }
     }
 }

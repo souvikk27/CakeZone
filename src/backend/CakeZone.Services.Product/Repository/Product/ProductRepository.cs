@@ -20,6 +20,8 @@ namespace CakeZone.Services.Product.Repository.Product
 
         public async Task<IEnumerable<Model.Product>> GetProductsWithImages(string sku) =>
             await Context.Products.Include(i => i.ProductImages)
+            .Include(c => c.Categories)
+            .Include(a => a.Attributes)
                 .Where(p => p.Sku == sku)
                 .ToListAsync();
 

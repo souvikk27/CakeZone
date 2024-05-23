@@ -16,6 +16,14 @@
                 throw new ArgumentException("Invalid image file.");
             }
 
+            var validExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+            var fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+
+            if (!validExtensions.Contains(fileExtension))
+            {
+                throw new ArgumentException("Invalid image file extension.");
+            }
+
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/cake/");
             if (!Directory.Exists(uploadsFolder))
             {

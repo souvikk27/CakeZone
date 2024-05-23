@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
+using CakeZone.Services.Product.CQRS.Product;
 using CakeZone.Services.Product.Extension;
-using CakeZone.Services.Product.Repository.Image;
 using CakeZone.Services.Product.Repository.Product;
-using CakeZone.Services.Product.Services;
 using CakeZone.Services.Product.Services.FIlters;
-using CakeZone.Services.Product.Services.Image;
 using CakeZone.Services.Product.Services.Logging;
 using CakeZone.Services.Product.Shared.Products;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeZone.Services.Product.Controllers
@@ -18,21 +17,18 @@ namespace CakeZone.Services.Product.Controllers
         private readonly ILoggerManager _logger;
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-        private readonly IImageService _imageService;
-        private readonly IProductImageRepository _productImageRepository;
+        private readonly IMediator _mediator;
 
         /// <inheritdoc />
         public ProductController(ILoggerManager logger,
             IProductRepository productRepository,
             IMapper mapper,
-            IImageService imageService,
-            IProductImageRepository productImageRepository)
+            IMediator mediator)
         {
             _logger = logger;
             _productRepository = productRepository;
             _mapper = mapper;
-            _imageService = imageService;
-            _productImageRepository = productImageRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -44,16 +40,9 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllProducts([FromQuery] ProductParameter productParameter)
         {
-            var products = await _productRepository.GetAll();
-            IEnumerable<ProductViewDto> productsView = _mapper.Map<IEnumerable<ProductViewDto>>(products);
-            var filteredProduct = productsView.Where(product =>
-                                     (productParameter.AddedOn == DateTime.MinValue || productParameter.AddedOn == product.CreatedAt) &&
-                                     (string.IsNullOrEmpty(productParameter.ProductName) || productParameter.ProductName == product.Name))
-                                     .ToList();
-            var metadata = new MetaData().Initialize(productParameter.PageNumber, productParameter.PageSize, filteredProduct.Count());
-            metadata.AddResponseHeaders(Response);
-            var pagedList = PagedList<ProductViewDto>.ToPagedList(filteredProduct, productParameter.PageNumber, productParameter.PageSize);
-            return Ok(pagedList);
+            var query = new GetAllProductsQuery(productParameter);
+            var pagedList = await _mediator.Send(query);
+            return ApiResponseExtension.ToPaginatedApiResult(pagedList, "products", "200", pagedList.MetaData.CurrentPage, pagedList.MetaData.TotalPages);
         }
 
         [HttpGet]
@@ -119,18 +108,7 @@ namespace CakeZone.Services.Product.Controllers
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             var product = await _productRepository.GetById(id);
-            var productImage = await _productImageRepository.FindAsync(p => p.ProductId == id);
-            
-            var location = productImage.FirstOrDefault().Url;
 
-            var result = await _imageService.RemoveImageAsync(location);
-
-            if (result)
-            {
-                _logger.LogInfo("Image found and removed from product");
-            }
-            await _productImageRepository.Remove(productImage.FirstOrDefault());
-            await _productImageRepository.SaveAsync();
             await _productRepository.Remove(product);
             await _productRepository.SaveAsync();
             return ApiResponseExtension.ToSuccessApiResult(product, "product removed", "200");

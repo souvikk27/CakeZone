@@ -58,5 +58,10 @@ namespace CakeZone.Services.Product.Extension
                 context.Database.Migrate();
             }
         }
+
+        public static void HandleInfrastructure(this IServiceCollection services)
+        {
+            services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(ServiceExtension).Assembly));
+        }
     }
 }

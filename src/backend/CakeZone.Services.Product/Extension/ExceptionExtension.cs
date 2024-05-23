@@ -28,6 +28,7 @@ namespace CakeZone.Services.Product.Extension
                         logger.LogError($"Something went wrong {contextFeature.Error}");
                         await context.Response.WriteAsync(new ErrorDetails()
                         {
+                            Instance = context.Request.Path,
                             SattusCode = context.Response.StatusCode,
                             Message = contextFeature.Error.Message,
                         }.ToString());

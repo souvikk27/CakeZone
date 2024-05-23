@@ -7,13 +7,14 @@
     <UserSecretsId>e3776468-7c51-40a3-837f-dd8922b1bce8</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
-	  <NoWarn>8618;8603;8625;8602;</NoWarn>
+	  <NoWarn>8618;8603;8625;8602;8601;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
@@ -30,6 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="CQRS\Category\" />
+    <Folder Include="CQRS\Attribute\" />
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\images\cake\" />

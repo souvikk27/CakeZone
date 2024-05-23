@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CakeZone.Services.Product.Services;
+using Microsoft.AspNetCore.Mvc;
 using ApiResponseStatusEnum = CakeZone.Services.Product.Model.Generic.ApiResponseStatusEnum;
 
 namespace CakeZone.Services.Product.Extension
@@ -40,5 +41,20 @@ namespace CakeZone.Services.Product.Extension
                     message,
                     payload,
                     statuscode));
+
+        public static ObjectResult ToPaginatedApiResult(object payload,
+            string message = null, 
+            string statuscode = null, 
+            int currentPage = 0, 
+            int totalPages = 0) =>
+            new ObjectResult(
+                new Model.Generic.PaginatedResponseModel<object>(
+                    ApiResponseStatusEnum.Success,
+                    message ?? GenericSuccessMessage,
+                    payload,
+                    statuscode,
+                    Guid.NewGuid(),
+                    currentPage,
+                    totalPages));
     }
 }

@@ -4,6 +4,7 @@ namespace CakeZone.Services.Product.Model.Error
 {
     public class ErrorDetails
     {
+        public string? Instance { get; set; }
         public int SattusCode { get; set; }
         public string? Message { get; set; }
 

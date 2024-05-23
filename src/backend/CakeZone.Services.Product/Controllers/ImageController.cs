@@ -36,5 +36,21 @@ namespace CakeZone.Services.Product.Controllers
             await _productImageRepository.SaveAsync();
             return ApiResponseExtension.ToSuccessApiResult(productImages, "product images created", "200");
         }
+
+        [HttpDelete]
+        [Produces("application/json")]
+        public async Task<IActionResult> DeleteProductImages([FromQuery] Guid productId)
+        {
+            var productImage = await _productImageRepository.FindAsync(p => p.ProductId == productId);
+
+            foreach (var image in productImage)
+            {
+                var location = image.Url;
+                var result = await _imageService.RemoveImageAsync(location);
+                await _productImageRepository.Remove(image);
+                await _productImageRepository.SaveAsync();
+            }
+            return ApiResponseExtension.ToSuccessApiResult("Removed", "product images removed", "200");
+        }
     }
 }

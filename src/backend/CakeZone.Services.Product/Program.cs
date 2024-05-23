@@ -12,6 +12,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDbContext(configuration);
+builder.Services.HandleInfrastructure();
 builder.Services.ConfigureMappings();
 builder.Services.ConfigureRepositories();
 builder.Services.AddImageService();

@@ -87,15 +87,15 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateProduct([FromBody] ProductCreateDto productCreateDto)
         {
-            var productExist = await _productRepository.FindAsync(p => p.Name == productCreateDto.Products.Name);
-
-            if (productExist.Any())
+            
+            var command = new CreateProductCommand(productCreateDto);
+            var product = await _mediator.Send(command);
+            if(product != null)
             {
-                return ApiResponseExtension.ToWarningApiResult("Bad Request", "Requested product with name already exists!", "400");
+                return ApiResponseExtension.ToErrorApiResult("Bad Request", 
+                    $"Product with name {productCreateDto.Products.Name} " +
+                    $"already exists eiher change product name or contact support!", "400");
             }
-            var product = _mapper.Map<Model.Product>(productCreateDto.Products);
-            await _productRepository.AddProductsWithParametersAsync(product, productCreateDto.CategoryId, productCreateDto.AttributeProduct);
-            await _productRepository.SaveAsync();
             return ApiResponseExtension.ToSuccessApiResult(product, "Product created", "200");
         }
 

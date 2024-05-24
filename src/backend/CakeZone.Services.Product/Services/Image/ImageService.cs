@@ -1,4 +1,7 @@
-﻿namespace CakeZone.Services.Product.Services.Image
+﻿using CakeZone.Services.Product.Services.Validation;
+using FluentValidation;
+
+namespace CakeZone.Services.Product.Services.Image
 {
     public class ImageService : IImageService
     {
@@ -11,17 +14,12 @@
 
         public async Task<string> SaveImageAsync(IFormFile imageFile)
         {
-            if (imageFile == null || imageFile.Length == 0)
-            {
-                throw new ArgumentException("Invalid image file.");
-            }
+            var validator = new ImageFileValidator();
+            var validationResult = await validator.ValidateAsync(imageFile);
 
-            var validExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
-            var fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
-
-            if (!validExtensions.Contains(fileExtension))
+            if (!validationResult.IsValid)
             {
-                throw new ArgumentException("Invalid image file extension.");
+                throw new ValidationException(validationResult.Errors);
             }
 
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/cake/");

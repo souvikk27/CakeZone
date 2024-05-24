@@ -1,0 +1,6 @@
+@CakeZone.Services.Orders_HostAddress = http://localhost:5195
+
+GET {{CakeZone.Services.Orders_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

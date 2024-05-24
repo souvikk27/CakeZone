@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CakeZone.Services.Product.Shared.Products;
 
-public class ProductsUpdateDto
+public record ProductsUpdateDto
 {
     [Key]
     public Guid ProductId { get; set; }

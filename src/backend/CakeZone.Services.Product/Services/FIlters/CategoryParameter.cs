@@ -1,4 +1,4 @@
-﻿namespace CakeZone.Services.Product.Services.FIlters;
+﻿namespace CakeZone.Services.Product.Services.Filters;
 
 public class CategoryParameter : RequestParameter
 {

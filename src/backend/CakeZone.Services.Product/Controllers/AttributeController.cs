@@ -1,10 +1,10 @@
-using AutoMapper;
+using CakeZone.Services.Product.CQRS.Attribute;
 using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Repository.Attribute;
 using CakeZone.Services.Product.Services;
-using CakeZone.Services.Product.Services.FIlters;
-using CakeZone.Services.Product.Services.Logging;
+using CakeZone.Services.Product.Services.Filters;
 using CakeZone.Services.Product.Shared.Attributes;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeZone.Services.Product.Controllers
@@ -13,15 +13,13 @@ namespace CakeZone.Services.Product.Controllers
     [ApiController]
     public class AttributeController : ControllerBase
     {
-        private readonly ILoggerManager _logger;
-        private readonly IMapper _mapper;
         private readonly IAttributeRepository _attributeRepository;
+        private readonly IMediator _mediator;
 
-        public AttributeController(ILoggerManager logger, IAttributeRepository attributeRepository, IMapper mapper)
+        public AttributeController(IAttributeRepository attributeRepository, IMediator mediator)
         {
-            _logger = logger;
             _attributeRepository = attributeRepository;
-            _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -64,12 +62,14 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAttributeByName([FromQuery] string name)
         {
-            var attribute = await _attributeRepository.FindAsync(a => a.AttributeName == name);
-            if (!attribute.Any())
-            {
-                return ApiResponseExtension.ToErrorApiResult("Not Found", "requuested attribute not found", "404");
-            }
-            return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute", "200");
+            var query = new GetAttributeByNameQuery(name);
+            var attribute = await _mediator.Send(query);
+            return attribute == null
+                ? ApiResponseExtension.ToErrorApiResult("Not Found",
+                    "Requested attribute doesn't exist",
+                    "404")
+                : ApiResponseExtension.ToSuccessApiResult(attribute,
+                    "attribute");
         }
 
         [HttpPost]
@@ -81,13 +81,19 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateAttribute([FromBody] CreateAttributeDto createAttribute)
         {
-            var attribute = _mapper.Map<Model.Attribute>(createAttribute);
-            await _attributeRepository.AddAsync(attribute);
-            await _attributeRepository.SaveAsync();
+            var command = new CreateAttributeCommand(createAttribute);
+            var attribute = await _mediator.Send(command);
+            if (attribute != null)
+            {
+                return ApiResponseExtension.ToErrorApiResult("Bad Request",
+                    $"Attribute with name {createAttribute.AttributeName} " +
+                    $"already exists either change attribute name or contact support!",
+                    "400");
+            }
             return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute created", "200");
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [Produces("application/json")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -96,11 +102,15 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAttribute([FromBody] UpdateAttributeDto updateAttribute)
         {
-            var attribute = await _attributeRepository.GetById(updateAttribute.AttributeId);
-            attribute = _mapper.Map(updateAttribute, attribute);
-            await _attributeRepository.UpdateAsync(attribute);
-            await _attributeRepository.SaveAsync();
-            return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute updated", "204");
+            var command = new UpdateAttributeCommand(updateAttribute);
+            var attribute = await _mediator.Send(command);
+            if (attribute == null) 
+            {
+                return ApiResponseExtension.ToErrorApiResult("Not Found",
+                    $"Attribute with name {updateAttribute.AttributeName} " +   
+                    $"not found!", "404");
+            }   
+            return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute updated", "204");  
         }
 
         [HttpDelete("{id}")]
@@ -111,9 +121,8 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RemoveAttribute(Guid id)
         {
-            var attribute = await _attributeRepository.GetById(id);
-            await _attributeRepository.Remove(attribute);
-            await _attributeRepository.SaveAsync();
+            var command = new DeleteAttributeCommand(id);
+            var attribute = await _mediator.Send(command);
             return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute removed", "200");
         }
     }

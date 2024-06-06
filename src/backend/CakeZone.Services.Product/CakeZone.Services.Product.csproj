@@ -34,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="CQRS\Category\" />
-    <Folder Include="CQRS\Attribute\" />
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\images\cake\" />

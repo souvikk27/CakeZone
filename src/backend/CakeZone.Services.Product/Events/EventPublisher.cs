@@ -1,6 +1,9 @@
-﻿namespace CakeZone.Services.Product.Events
+﻿using MediatR;
+
+namespace CakeZone.Services.Product.Events
 {
-    public class EventPublisher 
+    
+    public class EventPublisher : INotification
     {
 
     }

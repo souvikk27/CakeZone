@@ -1,12 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CakeZone.Services.Product.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.EntityFrameworkCore;
-
 namespace CakeZone.Services.Product.Model
 {
-    public partial class Product
+    public sealed class Product
     {
         [Key] 
         public Guid Id { get; set; }
@@ -18,9 +13,9 @@ namespace CakeZone.Services.Product.Model
         public DateTime? UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedAt { get; set; }
-        public virtual ICollection<Category> Categories { get; set; }
-        public virtual ICollection<Attribute> Attributes { get; set; }
-        public virtual ICollection<ProductImage> ProductImages { get; set; }
+        public ICollection<Category> Categories { get; set; }
+        public ICollection<Attribute> Attributes { get; set; }
+        public ICollection<ProductImage> ProductImages { get; set; }
     }
 
 }

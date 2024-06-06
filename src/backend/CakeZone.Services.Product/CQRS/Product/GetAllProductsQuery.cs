@@ -1,5 +1,5 @@
 ﻿using CakeZone.Services.Product.Services;
-using CakeZone.Services.Product.Services.FIlters;
+using CakeZone.Services.Product.Services.Filters;
 using CakeZone.Services.Product.Shared.Products;
 using MediatR;
 

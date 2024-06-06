@@ -1,6 +1,6 @@
 ﻿using CakeZone.Services.Product.CQRS.Product;
 using CakeZone.Services.Product.Extension;
-using CakeZone.Services.Product.Services.FIlters;
+using CakeZone.Services.Product.Services.Filters;
 using CakeZone.Services.Product.Services.Logging;
 using CakeZone.Services.Product.Shared.Products;
 using MediatR;
@@ -34,7 +34,11 @@ namespace CakeZone.Services.Product.Controllers
         {
             var query = new GetAllProductsQuery(productParameter);
             var pagedList = await _mediator.Send(query);
-            return ApiResponseExtension.ToPaginatedApiResult(pagedList, "products", "200", pagedList.MetaData.CurrentPage, pagedList.MetaData.TotalPages);
+            return ApiResponseExtension.ToPaginatedApiResult(pagedList,
+                "products",
+                "200",
+                pagedList.MetaData.CurrentPage,
+                pagedList.MetaData.TotalPages);
         }
 
         [HttpGet]
@@ -50,7 +54,9 @@ namespace CakeZone.Services.Product.Controllers
             var product = await _mediator.Send(query);
             if (product == null)
             {
-                return ApiResponseExtension.ToErrorApiResult("Not Found", $"Product with name {productName} not found", "404");
+                return ApiResponseExtension.ToErrorApiResult("Not Found",
+                    $"Product with name {productName} not found",
+                    "404");
             }
             return ApiResponseExtension.ToSuccessApiResult(product, "Product");
         }
@@ -66,11 +72,12 @@ namespace CakeZone.Services.Product.Controllers
         {
             var query = new GetProductsBySkuQuery(sku);
             var product = await _mediator.Send(query);
-            if (product == null)
-            {
-                return ApiResponseExtension.ToErrorApiResult("Not Found", $"Product with sku {sku} not found", "404");
-            }
-            return ApiResponseExtension.ToSuccessApiResult(product, "Product");
+            return product == null
+                ? ApiResponseExtension.ToErrorApiResult("Not Found",
+                    $"Product with sku {sku} not found",
+                    "404")
+                : ApiResponseExtension.ToSuccessApiResult(product,
+                    "Product");
         }
 
         [HttpPost]
@@ -88,7 +95,7 @@ namespace CakeZone.Services.Product.Controllers
             {
                 return ApiResponseExtension.ToErrorApiResult("Bad Request", 
                     $"Product with name {productCreateDto.Products.Name} " +
-                    $"already exists eiher change product name or contact support!", "400");
+                    $"already exists either change product name or contact support!", "400");
             }
             return ApiResponseExtension.ToSuccessApiResult(product, "Product created", "200");
         }

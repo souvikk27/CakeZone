@@ -3,7 +3,7 @@ using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Model;
 using CakeZone.Services.Product.Repository.Category;
 using CakeZone.Services.Product.Services;
-using CakeZone.Services.Product.Services.FIlters;
+using CakeZone.Services.Product.Services.Filters;
 using CakeZone.Services.Product.Shared.Categories;
 using Microsoft.AspNetCore.Mvc;
 

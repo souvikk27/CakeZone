@@ -1,4 +1,4 @@
-using CakeZone.Services.Product.Services.FIlters;
+using CakeZone.Services.Product.Services.Filters;
 
 namespace CakeZone.Services.Product.Repository.Attribute;
 

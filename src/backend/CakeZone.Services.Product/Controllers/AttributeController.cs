@@ -1,7 +1,5 @@
 using CakeZone.Services.Product.CQRS.Attribute;
 using CakeZone.Services.Product.Extension;
-using CakeZone.Services.Product.Repository.Attribute;
-using CakeZone.Services.Product.Services;
 using CakeZone.Services.Product.Services.Filters;
 using CakeZone.Services.Product.Shared.Attributes;
 using MediatR;
@@ -13,12 +11,10 @@ namespace CakeZone.Services.Product.Controllers
     [ApiController]
     public class AttributeController : ControllerBase
     {
-        private readonly IAttributeRepository _attributeRepository;
         private readonly IMediator _mediator;
 
-        public AttributeController(IAttributeRepository attributeRepository, IMediator mediator)
+        public AttributeController(IMediator mediator)
         {
-            _attributeRepository = attributeRepository;
             _mediator = mediator;
         }
 
@@ -30,16 +26,13 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAttributes([FromQuery] AttributeParameter attributeParameter)
         {
-            var attributes = await _attributeRepository.GetAll();
-
-            var filteredAttribute = attributes.Where(attribute =>
-                                     (attributeParameter.CreatedOn == DateTime.MinValue || attributeParameter.CreatedOn == attribute.CreatedAt) &&
-                                     (string.IsNullOrEmpty(attributeParameter.AttributeName) || attributeParameter.AttributeName == attribute.AttributeName))
-                                     .ToList();
-            var metadata = new MetaData().Initialize(attributeParameter.PageNumber, attributeParameter.PageSize, filteredAttribute.Count());
-            metadata.AddResponseHeaders(Response);
-            var pagedList = PagedList<Model.Attribute>.ToPagedList(filteredAttribute, attributeParameter.PageNumber, attributeParameter.PageSize);
-            return Ok(pagedList);
+            var query = new GetAllAttributesQuery(attributeParameter);
+            var attributes = await _mediator.Send(query);
+            return ApiResponseExtension.ToPaginatedApiResult(attributes,
+                    "attributes",
+                    "200",
+                    attributes.MetaData.CurrentPage,
+                    attributes.MetaData.TotalPages);
         }
 
         [HttpGet("{id}")]
@@ -50,8 +43,10 @@ namespace CakeZone.Services.Product.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAttributeById(Guid id)
         {
-            var attribute = await _attributeRepository.GetById(id);
-            return ApiResponseExtension.ToSuccessApiResult(attribute, "attribute", "200");
+            var query = new GetAttributeByIdQuery(id);
+            var attribute = await _mediator.Send(query);
+            return ApiResponseExtension.ToSuccessApiResult(attribute,
+                    "attribute");
         }
 
         [HttpGet("attribute")]

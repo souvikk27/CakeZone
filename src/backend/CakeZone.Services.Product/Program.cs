@@ -33,6 +33,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors("CorsPolicy");
+
 app.ConfigureExceptionHandler(app.Services.GetRequiredService<ILoggerManager>());
 
 app.MapControllers();

@@ -7,3 +7,4 @@ src/**/obj/
 /CakeZone.sln.DotSettings.user
 /src/backend/CakeZone.Services.Product/Properties/PublishProfiles
 /src/backend/CakeZone.Services.Product/.config
+/src/backend/CakeZone.Services.Product/CakeZone.Services.Product.csproj.user

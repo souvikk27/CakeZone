@@ -78,7 +78,7 @@ namespace CakeZone.Services.Product.Controllers
         {
             var command = new CreateAttributeCommand(createAttribute);
             var attribute = await _mediator.Send(command);
-            if (attribute != null)
+            if (attribute == null)
             {
                 return ApiResponseExtension.ToErrorApiResult("Bad Request",
                     $"Attribute with name {createAttribute.AttributeName} " +

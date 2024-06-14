@@ -1,5 +1,4 @@
 ﻿using CakeZone.Services.Inventory.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeZone.Services.Inventory.Controllers
@@ -18,7 +17,7 @@ namespace CakeZone.Services.Inventory.Controllers
         [HttpGet]
         public async Task<IActionResult> GetInventory()
         {
-            var result = await _inventoryRepository.ListAsync();
+            var result = await _inventoryRepository.ListAllAsync();
             return Ok(result);
         }
     }

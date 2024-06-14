@@ -2,7 +2,8 @@
 {
     public sealed class Inventory
     {
-        public Guid Id { get; set; }
+        public Guid ProductId { get; set; }
+        public Guid StorageDepotId { get; set; }
 
         public int CurrentLevel { get; set; }
 
@@ -18,20 +19,22 @@
 
         public int LeadTime { get; set; }
 
-        public int OrderQuantity { get; set; }
+        public int? OrderQuantity { get; set; }
 
-        public int OrderFrequency { get; set; }
+        public int? OrderFrequency { get; set; }
 
         public decimal HoldingCostPerUnit { get; set; }
 
-        public decimal OrderingCostPerOrder { get; set; }
+        public decimal? OrderingCostPerOrder { get; set; }
 
         public decimal ShortageCostPerUnit { get; set; }
 
         public int InventoryPosition { get; set; }
 
-        public int OrdersOutstanding { get; set; }
+        public int? OrdersOutstanding { get; set; }
 
-        public int UnitsShort { get; set; }
+        public int? UnitsShort { get; set; }
+
+        public Storage_Depot Storage_Depot { get; set; }
     }
 }

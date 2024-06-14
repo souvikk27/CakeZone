@@ -1,4 +1,4 @@
-﻿using Ardalis.Specification;
+﻿using Chronos.Specification;
 
 namespace CakeZone.Services.Inventory.Repository
 {

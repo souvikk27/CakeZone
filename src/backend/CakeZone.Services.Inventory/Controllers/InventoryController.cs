@@ -1,4 +1,5 @@
 ﻿using CakeZone.Services.Inventory.Repository;
+using Chronos.ApiResponse;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeZone.Services.Inventory.Controllers
@@ -18,7 +19,7 @@ namespace CakeZone.Services.Inventory.Controllers
         public async Task<IActionResult> GetInventory()
         {
             var result = await _inventoryRepository.ListAllAsync();
-            return Ok(result);
+            return ApiResponseExtension.ToPaginatedApiResult(result);
         }
     }
 }

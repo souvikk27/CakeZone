@@ -19,10 +19,10 @@ namespace CakeZone.Services.Product.CQRS.Attribute
 
         public async Task<Model.Attribute> Handle(DeleteAttributeCommand request, CancellationToken cancellationToken)
         {
-            var attribute = await _attributeRepository.GetById(request.Id);
+            var attribute = await _attributeRepository.GetByIdAsync(request.Id);
             attribute.IsDeleted = true;
             await _attributeRepository.UpdateAsync(attribute);
-            await _attributeRepository.SaveAsync();
+            await _attributeRepository.SaveChangesAsync();
             return attribute;
         }
     }

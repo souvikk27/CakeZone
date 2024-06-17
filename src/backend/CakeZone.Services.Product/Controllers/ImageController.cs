@@ -28,7 +28,7 @@ namespace CakeZone.Services.Product.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> UploadProductImages([FromForm] ProductImageCreateDto productImageDto)
         {
-            var product = await _productRepository.GetById(productImageDto.ProductId);
+            var product = await _productRepository.GetByIdAsync(productImageDto.ProductId);
 
             var productImages = await ImageHelper.CreateProductImagesAsync(_imageService,
                 productImageDto.ProductId,
@@ -39,7 +39,7 @@ namespace CakeZone.Services.Product.Controllers
             {
                 await _productImageRepository.AddAsync(productImage);
             }
-            await _productImageRepository.SaveAsync();
+            await _productImageRepository.SaveChangesAsync();
             return ApiResponseExtension.ToSuccessApiResult(productImages, "product images created", "200");
         }
 
@@ -47,7 +47,7 @@ namespace CakeZone.Services.Product.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> DeleteProductImages([FromQuery] Guid productId)
         {
-            var product = await _productRepository.GetById(productId);
+            var product = await _productRepository.GetByIdAsync(productId);
 
             var productImage = await _productImageRepository.FindAsync(p => p.ProductId == productId);
 
@@ -55,8 +55,8 @@ namespace CakeZone.Services.Product.Controllers
             {
                 var location = image.Url;
                 var result = await _imageService.RemoveImageAsync(location);
-                await _productImageRepository.Remove(image);
-                await _productImageRepository.SaveAsync();
+                await _productImageRepository.DeleteAsync(image);
+                await _productImageRepository.SaveChangesAsync();
             }
             return ApiResponseExtension.ToSuccessApiResult("Removed", "product images removed", "200");
         }

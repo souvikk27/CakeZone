@@ -15,7 +15,7 @@ namespace CakeZone.Services.Product.CQRS.Category
 
         public async Task<Model.Category> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetById(request.Id);
+            var category = await _categoryRepository.GetByIdAsync(request.Id);
             return category;
         }
     }

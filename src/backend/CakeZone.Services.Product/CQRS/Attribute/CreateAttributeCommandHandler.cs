@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CakeZone.Services.Product.Repository.Attribute;
-using CakeZone.Services.Product.Shared.Attributes;
 using MediatR;
 using Attributes = CakeZone.Services.Product.Model.Attribute;
 
@@ -32,7 +31,7 @@ namespace CakeZone.Services.Product.CQRS.Attribute
 
             var attribute = _mapper.Map<Attributes>(request.CreateAttributeDto);
             await _attributeRepository.AddAsync(attribute);
-            await _attributeRepository.SaveAsync();
+            await _attributeRepository.SaveChangesAsync();
             return attribute;
         }
     }

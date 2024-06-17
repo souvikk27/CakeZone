@@ -1,12 +1,13 @@
 using System.Linq.Expressions;
 using CakeZone.Services.Product.Data;
+using Chronos.Specification;
 using Microsoft.EntityFrameworkCore;
 
 namespace CakeZone.Services.Product.Repository.Category;
 
 public class CategoryRepository : RepositoryBase<Model.Category, ApplicationDbContext>, ICategoryRepository
 {
-    public CategoryRepository(IRepositoryOptions<ApplicationDbContext> options) : base(options)
+    public CategoryRepository(ApplicationDbContext options) : base(options)
     {
         
     }

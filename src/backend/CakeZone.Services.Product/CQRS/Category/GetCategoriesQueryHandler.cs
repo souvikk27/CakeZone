@@ -15,7 +15,7 @@ namespace CakeZone.Services.Product.CQRS.Category
 
         public async Task<PagedList<Model.Category>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var categories = await _categoryRepository.GetAll();
+            var categories = await _categoryRepository.ListAllAsync();
             var filteredCategories = categories.Where(attribute =>
                     (request.Parameter.AddedOn == DateTime.MinValue ||
                      request.Parameter.AddedOn == attribute.CreatedAt) &&

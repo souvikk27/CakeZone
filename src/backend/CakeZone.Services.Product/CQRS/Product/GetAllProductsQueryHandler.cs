@@ -19,14 +19,20 @@ namespace CakeZone.Services.Product.CQRS.Product
 
         public async Task<PagedList<ProductViewDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await _productRepository.GetAll();
+            var products = await _productRepository.ListAllAsync();
             var productsView = _mapper.Map<IEnumerable<ProductViewDto>>(products);
             var filteredProduct = productsView.Where(product =>
-                                 (request.ProductParameter.AddedOn == DateTime.MinValue || request.ProductParameter.AddedOn == product.CreatedAt) &&
-                                 (string.IsNullOrEmpty(request.ProductParameter.ProductName) || request.ProductParameter.ProductName == product.Name))
+                                 (request.ProductParameter.AddedOn == DateTime.MinValue ||
+                                  request.ProductParameter.AddedOn == product.CreatedAt) &&
+                                 (string.IsNullOrEmpty(request.ProductParameter.ProductName) ||
+                                  request.ProductParameter.ProductName == product.Name))
                                  .ToList();
-            var metadata = new MetaData().Initialize(request.ProductParameter.PageNumber, request.ProductParameter.PageSize, filteredProduct.Count());
-            var pagedList = PagedList<ProductViewDto>.ToPagedList(filteredProduct, request.ProductParameter.PageNumber, request.ProductParameter.PageSize);
+            var metadata = new MetaData().Initialize(request.ProductParameter.PageNumber,
+                request.ProductParameter.PageSize,
+                filteredProduct.Count());
+            var pagedList = PagedList<ProductViewDto>.ToPagedList(filteredProduct,
+                request.ProductParameter.PageNumber,
+                request.ProductParameter.PageSize);
             return pagedList;
         }
     }

@@ -15,7 +15,7 @@ namespace CakeZone.Services.Product.CQRS.Attribute
 
         public async Task<PagedList<Model.Attribute>> Handle(GetAllAttributesQuery request, CancellationToken cancellationToken)
         {
-            var attributes = await _attributeRepository.GetAll();
+            var attributes = await _attributeRepository.ListAllAsync();
 
             var filteredAttribute = attributes.Where(attribute =>
                     (request.Parameter.CreatedOn == DateTime.MinValue ||

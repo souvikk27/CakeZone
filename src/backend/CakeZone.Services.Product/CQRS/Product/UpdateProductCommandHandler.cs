@@ -17,14 +17,14 @@ namespace CakeZone.Services.Product.CQRS.Product
 
         public async Task<Model.Product> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetById(request.ProductUpdateDto.ProductId);
+            var product = await _productRepository.GetByIdAsync(request.ProductUpdateDto.ProductId);
             if (product == null)
             {
                 throw new NotFoundApiException($"Product with ID {request.ProductUpdateDto.ProductId} not found");
             }
             var productUpdate = _mapper.Map<Model.Product>(request.ProductUpdateDto);
             await _productRepository.UpdateAsync(productUpdate);
-            await _productRepository.SaveAsync();
+            await _productRepository.SaveChangesAsync();
             return productUpdate;
         }
     }

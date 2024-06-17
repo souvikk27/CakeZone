@@ -30,7 +30,6 @@ namespace CakeZone.Services.Product.Extension
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IAttributeRepository, AttributeRepository>();
-            services.AddScoped(typeof(Repository.IRepositoryOptions<>), typeof(Repository.RepositoryOptions<>));
         }
 
         public static void AddImageService(this IServiceCollection services)

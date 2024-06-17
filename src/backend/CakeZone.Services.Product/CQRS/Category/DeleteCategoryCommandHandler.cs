@@ -1,6 +1,5 @@
 ﻿using CakeZone.Services.Product.Repository.Category;
 using MediatR;
-using NuGet.Protocol.Plugins;
 
 namespace CakeZone.Services.Product.CQRS.Category
 {
@@ -15,14 +14,14 @@ namespace CakeZone.Services.Product.CQRS.Category
 
         public async Task<Model.Category> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetById(request.Id);
+            var category = await _categoryRepository.GetByIdAsync(request.Id);
             if (category == null)
             {
                 return null;
             }
             category.IsDeleted = true;
             await _categoryRepository.UpdateAsync(category);    
-            await _categoryRepository.SaveAsync();
+            await _categoryRepository.SaveChangesAsync();
             return category;
         }
     }

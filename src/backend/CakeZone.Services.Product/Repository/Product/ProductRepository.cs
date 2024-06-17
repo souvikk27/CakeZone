@@ -3,14 +3,14 @@ using CakeZone.Services.Product.Shared.Attributes;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using System.Linq.Expressions;
+using Chronos.Specification;
 
 namespace CakeZone.Services.Product.Repository.Product
 {
     public class ProductRepository : RepositoryBase<Model.Product, ApplicationDbContext>, IProductRepository
     {
-        public ProductRepository(IRepositoryOptions<ApplicationDbContext> options) : base(options)
+        public ProductRepository(ApplicationDbContext options) : base(options)
         {
         }
 

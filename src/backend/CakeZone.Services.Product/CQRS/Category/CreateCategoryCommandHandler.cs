@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using CakeZone.Services.Product.Repository.Category;
 using MediatR;
-using NuGet.Protocol.Plugins;
-
 namespace CakeZone.Services.Product.CQRS.Category
 {
     public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Model.Category>
@@ -20,7 +18,7 @@ namespace CakeZone.Services.Product.CQRS.Category
         {
             var category = _mapper.Map<Model.Category>(request.CategoryCreateDto);
             await _categoryRepository.AddAsync(category);
-            await _categoryRepository.SaveAsync();
+            await _categoryRepository.SaveChangesAsync();
             return category;
         }
     }

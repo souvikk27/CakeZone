@@ -2,12 +2,13 @@
 using CakeZone.Services.Product.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Chronos.Specification;
 
 namespace CakeZone.Services.Product.Repository.Image
 {
     public class ProductImageRepository : RepositoryBase<ProductImage, ApplicationDbContext> , IProductImageRepository
     {
-        public ProductImageRepository(IRepositoryOptions<ApplicationDbContext> repositoryOptions) : base(repositoryOptions)
+        public ProductImageRepository(ApplicationDbContext repositoryOptions) : base(repositoryOptions)
         {
             
         }

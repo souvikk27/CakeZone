@@ -1,7 +1,7 @@
-using CakeZone.Services.Product.Services.Filters;
+using Chronos.Specification;
 
 namespace CakeZone.Services.Product.Repository.Attribute;
 
-public interface IAttributeRepository : IRepository<Model.Attribute>
+public interface IAttributeRepository : IRepositoryBase<Model.Attribute>
 {
 }

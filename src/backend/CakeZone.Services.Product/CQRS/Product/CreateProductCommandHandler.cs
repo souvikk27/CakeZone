@@ -26,7 +26,7 @@ namespace CakeZone.Services.Product.CQRS.Product
 
             var product = _mapper.Map<Model.Product>(request.ProductCreateDto.Products);
             await _productRepository.AddProductsWithParametersAsync(product, request.ProductCreateDto.CategoryId, request.ProductCreateDto.AttributeProduct);
-            await _productRepository.SaveAsync();
+            await _productRepository.SaveChangesAsync();
 
             return null;
         }

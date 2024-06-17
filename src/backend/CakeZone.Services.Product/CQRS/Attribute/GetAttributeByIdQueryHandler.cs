@@ -14,7 +14,7 @@ namespace CakeZone.Services.Product.CQRS.Attribute
 
         public async Task<Model.Attribute> Handle(GetAttributeByIdQuery request, CancellationToken cancellationToken)
         {
-            var attribute = await _attributeRepository.GetById(request.Id);
+            var attribute = await _attributeRepository.GetByIdAsync(request.Id);
             return attribute;
         }
     }

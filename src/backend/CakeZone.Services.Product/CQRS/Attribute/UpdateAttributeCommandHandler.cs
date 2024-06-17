@@ -26,7 +26,7 @@ namespace CakeZone.Services.Product.CQRS.Attribute
             }   
             var attribute = _mapper.Map(request.UpdateAttributeDto, attributeExists.First());
             await _attributeRepository.UpdateAsync(attribute);
-            await _attributeRepository.SaveAsync();
+            await _attributeRepository.SaveChangesAsync();
             return attribute;
         }
     }

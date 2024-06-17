@@ -60,7 +60,8 @@ namespace CakeZone.Services.Product.Extension
 
         public static void HandleInfrastructure(this IServiceCollection services)
         {
-            services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(ServiceExtension).Assembly));
+            services.AddMediatR(config => 
+                config.RegisterServicesFromAssemblies(typeof(ServiceExtension).Assembly));
         }
     }
 }

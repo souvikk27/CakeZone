@@ -39,8 +39,6 @@ app.ConfigureExceptionHandler(app.Services.GetRequiredService<ILoggerManager>())
 
 app.MapControllers();
 
-app.UseCors("CorsPolicy");
-
 app.UseStaticFiles();
 
 await app.RunAsync();

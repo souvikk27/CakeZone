@@ -1,5 +1,7 @@
-﻿using CakeZone.Services.Inventory.Repository;
+﻿using CakeZone.Services.Inventory.CQRS.Inventory;
+using CakeZone.Services.Inventory.Services.Filters;
 using Chronos.ApiResponse;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CakeZone.Services.Inventory.Controllers
@@ -8,18 +10,21 @@ namespace CakeZone.Services.Inventory.Controllers
     [ApiController]
     public class InventoryController : ControllerBase
     {
-        private readonly IInventoryRepository _inventoryRepository;
+        private readonly IMediator _mediator;
 
-        public InventoryController(IInventoryRepository inventoryRepository)
+        public InventoryController(IMediator mediator)
         {
-            _inventoryRepository = inventoryRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetInventory()
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetInventory([FromQuery] InventoryParameter parameter)
         {
-            var result = await _inventoryRepository.ListAllAsync();
-            return ApiResponseExtension.ToPaginatedApiResult(result);
+            var query = new GetInventoriesQuery(parameter);
+            var inventories = await _mediator.Send(query);
+            return ApiResponseExtension.ToPaginatedApiResult(inventories);
         }
     }
 }

@@ -3,6 +3,7 @@
     public sealed class Inventory
     {
         public Guid ProductId { get; set; }
+
         public Guid StorageDepotId { get; set; }
 
         public int CurrentLevel { get; set; }
@@ -34,7 +35,5 @@
         public int? OrdersOutstanding { get; set; }
 
         public int? UnitsShort { get; set; }
-
-        public Storage_Depot Storage_Depot { get; set; }
     }
 }

@@ -72,15 +72,10 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.Property<int>("StandardDeviationDemand")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("Storage_DepotId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int?>("UnitsShort")
                         .HasColumnType("int");
 
                     b.HasKey("ProductId", "StorageDepotId");
-
-                    b.HasIndex("Storage_DepotId");
 
                     b.ToTable("Inventory");
                 });
@@ -216,17 +211,6 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Supplier");
-                });
-
-            modelBuilder.Entity("CakeZone.Services.Inventory.Model.Inventory", b =>
-                {
-                    b.HasOne("CakeZone.Services.Inventory.Model.Storage_Depot", "Storage_Depot")
-                        .WithMany()
-                        .HasForeignKey("Storage_DepotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Storage_Depot");
                 });
 
             modelBuilder.Entity("CakeZone.Services.Inventory.Model.StockIssue", b =>

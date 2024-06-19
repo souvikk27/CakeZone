@@ -1,8 +1,7 @@
 ﻿using CakeZone.Services.Inventory.CQRS.Inventory;
-using CakeZone.Services.Inventory.Event;
 using CakeZone.Services.Inventory.Services.Filters;
+using CakeZone.Services.Inventory.Shared.Inventory;
 using Chronos.ApiResponse;
-using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +12,10 @@ namespace CakeZone.Services.Inventory.Controllers
     public class InventoryController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IPublishEndpoint _publishEndpoint;
 
-        public InventoryController(IMediator mediator, IPublishEndpoint publishEndpoint)
+        public InventoryController(IMediator mediator)
         {
             _mediator = mediator;
-            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -29,6 +26,16 @@ namespace CakeZone.Services.Inventory.Controllers
             var query = new GetInventoriesQuery(parameter);
             var inventories = await _mediator.Send(query);
             return ApiResponseExtension.ToPaginatedApiResult(inventories);
+        }
+
+        [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDto createInventory)
+        {
+            var command = new CreateInventoryCommand(createInventory);
+            var inventory = await _mediator.Send(command);
+            return ApiResponseExtension.ToSuccessApiResult(inventory);
         }
     }
 }

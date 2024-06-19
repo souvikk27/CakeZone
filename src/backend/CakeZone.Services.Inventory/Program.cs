@@ -18,7 +18,7 @@ builder.Services.ConfigureRepositories();
 builder.Services.ConfigureCors();
 builder.Services.ConfigureMassTransit();
 builder.Services.HandleInfrastructure();
-
+builder.Services.ConfigureMappings();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

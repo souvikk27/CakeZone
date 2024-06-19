@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CakeZone.Services.Product.Extension;
 
 namespace CakeZone.Services.Product.Model
 {
@@ -14,6 +15,6 @@ namespace CakeZone.Services.Product.Model
         public DateTime? DeletedAt { get; set; }
         public virtual Category ParentCategory { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; }  
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

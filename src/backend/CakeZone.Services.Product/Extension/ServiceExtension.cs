@@ -1,10 +1,12 @@
-﻿using CakeZone.Services.Product.Data;
+﻿using System.Text.Json;
+using CakeZone.Services.Product.Data;
 using CakeZone.Services.Product.Repository.Attribute;
 using CakeZone.Services.Product.Repository.Category;
 using CakeZone.Services.Product.Repository.Image;
 using CakeZone.Services.Product.Repository.Product;
 using CakeZone.Services.Product.Services.Image;
 using CakeZone.Services.Product.Services.Logging;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 namespace CakeZone.Services.Product.Extension
@@ -45,6 +47,24 @@ namespace CakeZone.Services.Product.Extension
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
+            });
+        }
+
+        public static void ConfigureMassTransit(this IServiceCollection services)
+        {
+            services.AddMassTransit(buildConfiguration =>
+            {
+                buildConfiguration.SetKebabCaseEndpointNameFormatter();
+
+                buildConfiguration.UsingRabbitMq((context, config) =>
+                {
+                    config.Host("localhost", "/", h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+                    config.ConfigureEndpoints(context);
+                });
             });
         }
 

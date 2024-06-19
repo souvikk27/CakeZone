@@ -1,4 +1,7 @@
+using CakeZone.Services.Inventory.Event;
 using CakeZone.Services.Inventory.Extension;
+using CakeZone.Services.Inventory.Services;
+using MassTransit;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDbContexts(builder.Configuration);
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureCors();
-builder.Services.HandleInfrastructure();   
+builder.Services.ConfigureMassTransit();
+builder.Services.HandleInfrastructure();
 
 var app = builder.Build();
 

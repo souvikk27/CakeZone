@@ -18,11 +18,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeZone.Services.Orders", "src\backend\CakeZone.Services.Orders\CakeZone.Services.Orders.csproj", "{843797BD-7897-4690-BED7-4B7A6A2DDD04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CakeZone.Services.Orders", "src\backend\CakeZone.Services.Orders\CakeZone.Services.Orders.csproj", "{843797BD-7897-4690-BED7-4B7A6A2DDD04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeZone.Services.Inventory", "src\backend\CakeZone.Services.Inventory\CakeZone.Services.Inventory.csproj", "{B2315575-1933-43F5-8C00-96C93CE0A706}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CakeZone.Services.Inventory", "src\backend\CakeZone.Services.Inventory\CakeZone.Services.Inventory.csproj", "{B2315575-1933-43F5-8C00-96C93CE0A706}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeZone.Services.User", "src\backend\CakeZone.Services.User\CakeZone.Services.User.csproj", "{8C8B2122-D161-4387-94B4-5E76D18D50B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CakeZone.Services.User", "src\backend\CakeZone.Services.User\CakeZone.Services.User.csproj", "{8C8B2122-D161-4387-94B4-5E76D18D50B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibrary", "src\backend\SharedLibrary\SharedLibrary.csproj", "{D46BB97D-DD25-4022-AC6C-50D9249F2887}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{8C8B2122-D161-4387-94B4-5E76D18D50B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C8B2122-D161-4387-94B4-5E76D18D50B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C8B2122-D161-4387-94B4-5E76D18D50B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D46BB97D-DD25-4022-AC6C-50D9249F2887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D46BB97D-DD25-4022-AC6C-50D9249F2887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D46BB97D-DD25-4022-AC6C-50D9249F2887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D46BB97D-DD25-4022-AC6C-50D9249F2887}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{843797BD-7897-4690-BED7-4B7A6A2DDD04} = {EF59349B-F641-4D22-9796-45B479FC191A}
 		{B2315575-1933-43F5-8C00-96C93CE0A706} = {EF59349B-F641-4D22-9796-45B479FC191A}
 		{8C8B2122-D161-4387-94B4-5E76D18D50B9} = {EF59349B-F641-4D22-9796-45B479FC191A}
+		{D46BB97D-DD25-4022-AC6C-50D9249F2887} = {EF59349B-F641-4D22-9796-45B479FC191A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {989A2992-31E0-4418-9305-3709398EC8A3}

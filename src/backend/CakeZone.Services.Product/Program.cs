@@ -1,6 +1,7 @@
 ﻿using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Services.Logging;
 using System.Text.Json.Serialization;
+using CakeZone.Services.Product.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -13,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDbContext(configuration);
 builder.Services.HandleInfrastructure();
+builder.Services.ConfigureMassTransit();
 builder.Services.ConfigureMappings();
 builder.Services.ConfigureRepositories();
 builder.Services.AddImageService();

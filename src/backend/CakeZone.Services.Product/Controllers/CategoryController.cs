@@ -61,7 +61,7 @@ namespace CakeZone.Services.Product.Controllers
             var category = await _mediator.Send(query);
             return category == null
                 ? ApiResponseExtension.ToErrorApiResult("Not Found",
-                    "requuested category not found",
+                    "requested category not found",
                     "404")
                 : ApiResponseExtension.ToSuccessApiResult(category,
                     "category",

@@ -3,8 +3,10 @@ using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Services.Filters;
 using CakeZone.Services.Product.Services.Logging;
 using CakeZone.Services.Product.Shared.Products;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SharedLibrary.Event;
 
 namespace CakeZone.Services.Product.Controllers
 {
@@ -14,13 +16,15 @@ namespace CakeZone.Services.Product.Controllers
     {
         private readonly ILoggerManager _logger;
         private readonly IMediator _mediator;
+        private readonly IPublishEndpoint _publishEndpoint;
 
         /// <inheritdoc />
         public ProductController(ILoggerManager logger,
-            IMediator mediator)
+            IMediator mediator, IPublishEndpoint publishEndpoint)
         {
             _logger = logger;
             _mediator = mediator;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -97,6 +101,17 @@ namespace CakeZone.Services.Product.Controllers
                     $"Product with name {productCreateDto.Products.Name} " +
                     $"already exists either change product name or contact support!", "400");
             }
+
+            var productCreated = new ProductCreated
+            {
+                ProductId = productCreateDto.Products.Id,
+                StorageDepotId = Guid.NewGuid(),
+                MaxLevel = 1000,
+                CurrentLevel = 1000,
+                MinLevel = 500
+            };
+
+            await _publishEndpoint.Publish(productCreated);
             return ApiResponseExtension.ToSuccessApiResult(product, "Product created", "200");
         }
 

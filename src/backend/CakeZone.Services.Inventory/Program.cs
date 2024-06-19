@@ -1,8 +1,4 @@
-using CakeZone.Services.Inventory.Event;
 using CakeZone.Services.Inventory.Extension;
-using CakeZone.Services.Inventory.Services;
-using MassTransit;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +15,10 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureMassTransit();
 builder.Services.HandleInfrastructure();
 builder.Services.ConfigureMappings();
+
 var app = builder.Build();
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -29,11 +28,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.ConfigureExceptionHandler(logger);
 app.UseAuthorization();
-
 app.UseCors("CorsPolicy");
-
 app.MapControllers();
 
 app.Run();

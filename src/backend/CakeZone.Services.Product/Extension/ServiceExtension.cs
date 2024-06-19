@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using CakeZone.Services.Product.Data;
+﻿using CakeZone.Services.Product.Data;
 using CakeZone.Services.Product.Repository.Attribute;
 using CakeZone.Services.Product.Repository.Category;
 using CakeZone.Services.Product.Repository.Image;

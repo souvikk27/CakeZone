@@ -29,6 +29,7 @@ namespace CakeZone.Services.Inventory.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         [Consumes("application/json")]
         [Produces("application/json")]
         public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDto createInventory)

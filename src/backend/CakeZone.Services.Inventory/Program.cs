@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CakeZone.Services.Inventory.Extension;
 using CakeZone.Services.Inventory.Services.Filters;
 
@@ -6,8 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(option =>
 {
     option.Filters.Add<ValidationFilterAttribute>();
-});
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+}).AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace CakeZone.Services.Inventory.Services.Validation
 {
-    public class InventoryValidator : AbstractValidator<CreateInventoryDto>
+    public class CreateInventoryValidator : AbstractValidator<CreateInventoryDto>
     {
-        public InventoryValidator()
+        public CreateInventoryValidator()
         {
             RuleFor(x => x.ProductId).NotEmpty()
                 .WithMessage("Product Id cannot be empty");

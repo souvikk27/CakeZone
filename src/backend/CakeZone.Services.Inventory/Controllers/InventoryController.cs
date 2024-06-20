@@ -29,12 +29,23 @@ namespace CakeZone.Services.Inventory.Controllers
             return ApiResponseExtension.ToPaginatedApiResult(inventories);
         }
 
+        [HttpGet]
+        [Route("product/{productId}/storage/{storageId}")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetInventoryByProductIdAndStorageId([FromRoute] Guid productId, [FromRoute] Guid storageId)
+        {
+            var query = new GetInventoryByProductIdAndStorageIdQuery(productId, storageId);
+            var inventory = await _mediator.Send(query);
+            return ApiResponseExtension.ToSuccessApiResult(inventory);
+        }
+
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
         public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDto createInventory)
         {
-            var validator = new InventoryValidator();
+            var validator = new CreateInventoryValidator();
             var validationResult = await validator.ValidateAsync(createInventory);
             if (!validationResult.IsValid)
             {
@@ -42,6 +53,34 @@ namespace CakeZone.Services.Inventory.Controllers
                     ,"400");
             }
             var command = new CreateInventoryCommand(createInventory);
+            var inventory = await _mediator.Send(command);
+            return ApiResponseExtension.ToSuccessApiResult(inventory);
+        }
+
+        [HttpPut]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> UpdateInventory([FromBody] UpdateInventoryDto updateInventory)
+        {
+            var validator = new UpdateInventoryValidator();
+            var validationResult = await validator.ValidateAsync(updateInventory);
+            if (!validationResult.IsValid)
+            {
+                return ApiResponseExtension.ToErrorApiResult(validationResult.Errors.Select(e => e.ErrorMessage),"Validation error"
+                    ,"400");
+            }
+            var command = new UpdateInventoryCommand(updateInventory);
+            var inventory = await _mediator.Send(command);
+            return ApiResponseExtension.ToSuccessApiResult(inventory);
+        }
+
+
+        [HttpDelete]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> DeleteInventory([FromQuery] Guid productIdGuid, [FromQuery] Guid storageGuid)
+        {
+            var command = new DeleteInventoryCommand(productIdGuid, storageGuid);
             var inventory = await _mediator.Send(command);
             return ApiResponseExtension.ToSuccessApiResult(inventory);
         }

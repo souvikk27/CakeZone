@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CakeZone.Services.Inventory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240619124403_InitialModel")]
+    [Migration("20240620064850_InitialModel")]
     partial class InitialModel
     {
         /// <inheritdoc />
@@ -33,7 +33,7 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.Property<Guid>("StorageDepotId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AverageDemand")
+                    b.Property<int?>("AverageDemand")
                         .HasColumnType("int");
 
                     b.Property<int>("CurrentLevel")
@@ -45,13 +45,13 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.Property<decimal>("HoldingCostPerUnit")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("InventoryPosition")
+                    b.Property<int?>("InventoryPosition")
                         .HasColumnType("int");
 
-                    b.Property<int>("LeadTime")
+                    b.Property<int?>("LeadTime")
                         .HasColumnType("int");
 
-                    b.Property<int>("MaxLevel")
+                    b.Property<int?>("MaxLevel")
                         .HasColumnType("int");
 
                     b.Property<int>("MinLevel")
@@ -69,16 +69,31 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.Property<int?>("OrdersOutstanding")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ShortageCostPerUnit")
+                    b.Property<decimal?>("ShortageCostPerUnit")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("StandardDeviationDemand")
+                    b.Property<int?>("StandardDeviationDemand")
                         .HasColumnType("int");
 
                     b.Property<int?>("UnitsShort")
                         .HasColumnType("int");
 
                     b.HasKey("ProductId", "StorageDepotId");
+
+                    b.HasIndex("CurrentLevel")
+                        .HasDatabaseName("IX_Inventory_CurrentLevel");
+
+                    b.HasIndex("MaxLevel")
+                        .HasDatabaseName("IX_Inventory_MaxLevel");
+
+                    b.HasIndex("MinLevel")
+                        .HasDatabaseName("IX_Inventory_MinLevel");
+
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("IX_Inventory_ProductId");
+
+                    b.HasIndex("StorageDepotId")
+                        .HasDatabaseName("IX_Inventory_StorageDepotId");
 
                     b.ToTable("Inventory");
                 });
@@ -92,6 +107,12 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("InventoryProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InventoryStorageDepotId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
@@ -101,7 +122,7 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("Storage_DepotId")
+                    b.Property<Guid>("StorageDepotId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -109,9 +130,16 @@ namespace CakeZone.Services.Inventory.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Storage_DepotId");
+                    b.HasIndex("IssueDate")
+                        .HasDatabaseName("IX_StockIssue_IssueDate");
 
-                    b.HasIndex("ProductId", "Storage_DepotId");
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("IX_StockIssue_ProductId");
+
+                    b.HasIndex("StorageDepotId")
+                        .HasDatabaseName("IX_StockIssue_StorageDepotId");
+
+                    b.HasIndex("InventoryProductId", "InventoryStorageDepotId");
 
                     b.ToTable("StockIssue");
                 });
@@ -137,9 +165,6 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.Property<Guid>("StorageDepotId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("Storage_DepotId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("SupplierId")
                         .HasColumnType("uniqueidentifier");
 
@@ -148,14 +173,22 @@ namespace CakeZone.Services.Inventory.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Storage_DepotId");
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("IX_StockReceipt_ProductId");
 
-                    b.HasIndex("SupplierId");
+                    b.HasIndex("ReceiptDate")
+                        .HasDatabaseName("IX_StockReceipt_ReceiptDate");
+
+                    b.HasIndex("StorageDepotId")
+                        .HasDatabaseName("IX_StockReceipt_StorageDepotId");
+
+                    b.HasIndex("SupplierId")
+                        .HasDatabaseName("IX_StockReceipt_SupplierId");
 
                     b.ToTable("StockReceipt");
                 });
 
-            modelBuilder.Entity("CakeZone.Services.Inventory.Model.Storage_Depot", b =>
+            modelBuilder.Entity("CakeZone.Services.Inventory.Model.StorageDepot", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -163,7 +196,7 @@ namespace CakeZone.Services.Inventory.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
@@ -173,14 +206,20 @@ namespace CakeZone.Services.Inventory.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Storage_Depot");
+                    b.HasIndex("Address")
+                        .HasDatabaseName("IX_StorageDepot_Address");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_StorageDepot_Name");
+
+                    b.ToTable("StorageDepot");
                 });
 
             modelBuilder.Entity("CakeZone.Services.Inventory.Model.Supplier", b =>
@@ -191,67 +230,99 @@ namespace CakeZone.Services.Inventory.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Address")
+                        .HasDatabaseName("IX_Supplier_Address");
+
+                    b.HasIndex("Email")
+                        .HasDatabaseName("IX_Supplier_Email");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Supplier_Name");
+
+                    b.HasIndex("Phone")
+                        .HasDatabaseName("IX_Supplier_Phone");
+
                     b.ToTable("Supplier");
+                });
+
+            modelBuilder.Entity("CakeZone.Services.Inventory.Model.Inventory", b =>
+                {
+                    b.HasOne("CakeZone.Services.Inventory.Model.StorageDepot", "StorageDepot")
+                        .WithMany("Inventories")
+                        .HasForeignKey("StorageDepotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StorageDepot");
                 });
 
             modelBuilder.Entity("CakeZone.Services.Inventory.Model.StockIssue", b =>
                 {
-                    b.HasOne("CakeZone.Services.Inventory.Model.Storage_Depot", "Storage_Depot")
-                        .WithMany()
-                        .HasForeignKey("Storage_DepotId")
+                    b.HasOne("CakeZone.Services.Inventory.Model.Inventory", "Inventory")
+                        .WithMany("StockIssues")
+                        .HasForeignKey("InventoryProductId", "InventoryStorageDepotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CakeZone.Services.Inventory.Model.Inventory", "Inventory")
-                        .WithMany()
-                        .HasForeignKey("ProductId", "Storage_DepotId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Inventory");
-
-                    b.Navigation("Storage_Depot");
                 });
 
             modelBuilder.Entity("CakeZone.Services.Inventory.Model.StockReceipt", b =>
                 {
-                    b.HasOne("CakeZone.Services.Inventory.Model.Storage_Depot", "Storage_Depot")
-                        .WithMany()
-                        .HasForeignKey("Storage_DepotId")
+                    b.HasOne("CakeZone.Services.Inventory.Model.StorageDepot", "StorageDepot")
+                        .WithMany("StockReceipts")
+                        .HasForeignKey("StorageDepotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CakeZone.Services.Inventory.Model.Supplier", "Supplier")
-                        .WithMany()
+                        .WithMany("StockReceipts")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Storage_Depot");
+                    b.Navigation("StorageDepot");
 
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("CakeZone.Services.Inventory.Model.Inventory", b =>
+                {
+                    b.Navigation("StockIssues");
+                });
+
+            modelBuilder.Entity("CakeZone.Services.Inventory.Model.StorageDepot", b =>
+                {
+                    b.Navigation("Inventories");
+
+                    b.Navigation("StockReceipts");
+                });
+
+            modelBuilder.Entity("CakeZone.Services.Inventory.Model.Supplier", b =>
+                {
+                    b.Navigation("StockReceipts");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,6 @@
 ﻿using CakeZone.Services.Product.Extension;
 using CakeZone.Services.Product.Services.Logging;
 using System.Text.Json.Serialization;
-using CakeZone.Services.Product.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;

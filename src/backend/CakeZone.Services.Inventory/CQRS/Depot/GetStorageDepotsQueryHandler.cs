@@ -19,17 +19,14 @@ namespace CakeZone.Services.Inventory.CQRS.Depot
             var storageDepots = await _storageDepotRepository.ListAllAsync();
 
             var filteredStorageDepots = storageDepots.Where(attribute =>
-                    (request.Parameter.AddedOn == DateTime.MinValue ||
-                     request.Parameter.AddedOn == attribute.CreatedAt) &&
-                    (string.IsNullOrEmpty(request.Parameter.Name) ||
-                     request.Parameter.Name == attribute.Name) &&
-                    (string.IsNullOrEmpty(attribute.Address) ||
-                     request.Parameter.Address == attribute.Address))
-                .ToList();
+                (request.Parameter.AddedOn == DateTime.MinValue || request.Parameter.AddedOn == attribute.CreatedAt) &&
+                (string.IsNullOrEmpty(request.Parameter.Name) || request.Parameter.Name == attribute.Name) &&
+                (string.IsNullOrEmpty(request.Parameter.Address) || request.Parameter.Address == attribute.Address)
+            ).ToList();
 
             var metadata = new MetaData().Initialize(request.Parameter.PageNumber,
                 request.Parameter.PageSize,
-                filteredStorageDepots.Count());
+                filteredStorageDepots.Count);
 
             return PagedList<StorageDepot>.ToPagedList(filteredStorageDepots,
                 request.Parameter.PageNumber,

@@ -22,11 +22,14 @@ namespace CakeZone.Services.Inventory.Extension
                             MutedApiException => StatusCodes.Status500InternalServerError,
                             _ => StatusCodes.Status500InternalServerError
                         };
+                        var statusType = HttpStatus.GetHttpStatusType(context.Response.StatusCode);
                         logger.LogError($"Something went wrong {contextFeature.Error}");
-                        await context.Response.WriteAsync(new ErrorDetails()
+                        await context.Response.WriteAsync(new ErrorDetails
                         {
+                            ApiResponseId = Guid.NewGuid(),
                             Instance = context.Request.Path,
-                            SattusCode = context.Response.StatusCode,
+                            StatusCode = context.Response.StatusCode,
+                            Status = statusType.ToString(),
                             Message = contextFeature.Error.Message,
                         }.ToString());
                     }

@@ -45,6 +45,10 @@ namespace CakeZone.Services.Inventory.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> CreateInventory([FromBody] CreateInventoryDto createInventory)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var validator = new CreateInventoryValidator();
             var validationResult = await validator.ValidateAsync(createInventory);
             if (!validationResult.IsValid)

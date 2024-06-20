@@ -33,5 +33,21 @@ namespace CakeZone.Services.Inventory.Controllers
             var storageDepot = await _mediator.Send(command);
             return ApiResponseExtension.ToSuccessApiResult(storageDepot);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateStorageDepot([FromBody] UpdateStorageDepotDto updateStorageDepotDto)
+        {
+            var command = new UpdateStorageDepotCommand(updateStorageDepotDto);
+            var storageDepot = await _mediator.Send(command);
+            return ApiResponseExtension.ToSuccessApiResult(storageDepot);
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStorageDepot(Guid depotId)
+        {
+            var command = new DeleteStorageDepotCommand(depotId);
+            var storageDepot = await _mediator.Send(command);
+            return ApiResponseExtension.ToSuccessApiResult(storageDepot);
+        }
     }
 }

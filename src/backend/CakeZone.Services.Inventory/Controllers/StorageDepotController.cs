@@ -1,4 +1,5 @@
 ﻿using CakeZone.Services.Inventory.CQRS.Depot;
+using CakeZone.Services.Inventory.Services.Filters;
 using CakeZone.Services.Inventory.Shared.Depot;
 using Chronos.ApiResponse;
 using MediatR;
@@ -15,6 +16,14 @@ namespace CakeZone.Services.Inventory.Controllers
         public StorageDepotController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStorageDepot([FromQuery] DepotParameter parameter)
+        {
+            var query = new GetStorageDepotsQuery(parameter);
+            var depots = await _mediator.Send(query);
+            return ApiResponseExtension.ToPaginatedApiResult(depots);
         }
 
         [HttpPost]

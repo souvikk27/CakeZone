@@ -2,6 +2,7 @@
 using MassTransit;
 using SharedLibrary.Event;
 using CakeZone.Services.Inventory.Model;
+using CakeZone.Services.Inventory.Shared.Inventory;
 
 namespace CakeZone.Services.Inventory.Event
 {
@@ -16,20 +17,14 @@ namespace CakeZone.Services.Inventory.Event
 
         public async Task Consume(ConsumeContext<ProductCreated> context)
         {
-            var inventory = new Model.Inventory
+            var inventory = new Model.Inventory()
             {
                 ProductId = context.Message.ProductId,
-                StorageDepotId = context.Message.StorageDepotId,
-                MaxLevel = context.Message.MaxLevel,
-                CurrentLevel = context.Message.CurrentLevel,
-                MinLevel = context.Message.MinLevel,
-                AverageDemand = 0,
-                StandardDeviationDemand = 0,
-                Demand = 0,
-                LeadTime = 0,
-                HoldingCostPerUnit = 0,
-                ShortageCostPerUnit = 0,
-                InventoryPosition = 2
+                StorageDepotId = Guid.Parse("4046081A-3ED3-466C-B9FB-A47900BEE007"),
+                CurrentLevel = 1000,
+                MinLevel = 500,
+                Demand = 1000,
+                HoldingCostPerUnit = 120
             };
             await _inventoryRepository.AddAsync(inventory);
             await _inventoryRepository.SaveChangesAsync();

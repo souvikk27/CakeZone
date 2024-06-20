@@ -3,7 +3,7 @@ using CakeZone.Services.Inventory.Data;
 using Chronos.Specification;
 using Microsoft.EntityFrameworkCore;
 
-namespace CakeZone.Services.Inventory.Repository
+namespace CakeZone.Services.Inventory.Repository.Inv
 {
     public class InventoryRepository : RepositoryBase<Model.Inventory, ApplicationDbContext>, IInventoryRepository
     {

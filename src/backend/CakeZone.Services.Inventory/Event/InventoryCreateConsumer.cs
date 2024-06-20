@@ -1,6 +1,7 @@
-﻿using CakeZone.Services.Inventory.Repository;
+﻿using CakeZone.Services.Inventory.Repository.Inv;
 using MassTransit;
 using SharedLibrary.Event;
+using CakeZone.Services.Inventory.Model;
 
 namespace CakeZone.Services.Inventory.Event
 {

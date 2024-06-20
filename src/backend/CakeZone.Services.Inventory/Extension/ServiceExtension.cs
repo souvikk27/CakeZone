@@ -1,6 +1,10 @@
 ﻿using CakeZone.Services.Inventory.Data;
 using CakeZone.Services.Inventory.Event;
-using CakeZone.Services.Inventory.Repository;
+using CakeZone.Services.Inventory.Repository.Depot;
+using CakeZone.Services.Inventory.Repository.Inv;
+using CakeZone.Services.Inventory.Repository.StockIssue;
+using CakeZone.Services.Inventory.Repository.StockReceipt;
+using CakeZone.Services.Inventory.Repository.Supplier;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +15,10 @@ namespace CakeZone.Services.Inventory.Extension
         public static void ConfigureRepositories(this IServiceCollection services)
         {
             services.AddScoped(typeof(IInventoryRepository), typeof(InventoryRepository));
+            services.AddScoped(typeof(IStockIssuesRepository), typeof(StockIssuesRepository));
+            services.AddScoped(typeof(IStockReceiptRepository), typeof(StockReceiptRepository));    
+            services.AddScoped(typeof(ISupplierRepository), typeof(SupplierRepository));
+            services.AddScoped(typeof(IStorageDepotRepository), typeof(StorageDepotRepository));
         }
 
         public static void ConfigureDbContexts(this IServiceCollection services, IConfiguration configuration)

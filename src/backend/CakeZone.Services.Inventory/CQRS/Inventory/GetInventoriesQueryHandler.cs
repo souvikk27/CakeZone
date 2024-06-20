@@ -1,4 +1,4 @@
-﻿using CakeZone.Services.Inventory.Repository;
+﻿using CakeZone.Services.Inventory.Repository.Inv;
 using CakeZone.Services.Inventory.Services;
 using MediatR;
 

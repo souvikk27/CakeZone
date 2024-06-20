@@ -20,7 +20,7 @@ namespace CakeZone.Services.Inventory.Migrations
                     Address = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -117,7 +117,7 @@ namespace CakeZone.Services.Inventory.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     InventoryProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     InventoryStorageDepotId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },

@@ -15,7 +15,7 @@ namespace CakeZone.Services.Inventory.Model
 
         public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();
 

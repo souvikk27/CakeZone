@@ -1,10 +1,12 @@
 using CakeZone.Services.Inventory.Extension;
+using CakeZone.Services.Inventory.Services.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
+builder.Services.AddControllers(option =>
+{
+    option.Filters.Add<ValidationFilterAttribute>();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

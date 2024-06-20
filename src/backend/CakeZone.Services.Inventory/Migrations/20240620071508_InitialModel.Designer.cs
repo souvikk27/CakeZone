@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CakeZone.Services.Inventory.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240620064850_InitialModel")]
+    [Migration("20240620071508_InitialModel")]
     partial class InitialModel
     {
         /// <inheritdoc />
@@ -125,7 +125,7 @@ namespace CakeZone.Services.Inventory.Migrations
                     b.Property<Guid>("StorageDepotId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -208,7 +208,7 @@ namespace CakeZone.Services.Inventory.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");

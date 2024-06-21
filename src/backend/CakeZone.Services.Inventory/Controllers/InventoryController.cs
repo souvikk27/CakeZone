@@ -26,7 +26,11 @@ namespace CakeZone.Services.Inventory.Controllers
         {
             var query = new GetInventoriesQuery(parameter);
             var inventories = await _mediator.Send(query);
-            return ApiResponseExtension.ToPaginatedApiResult(inventories);
+            return ApiResponseExtension.ToPaginatedApiResult(inventories,
+                "inventories", 
+                "200", 
+                inventories.MetaData.CurrentPage, 
+                inventories.MetaData.TotalPages);
         }
 
         [HttpGet]

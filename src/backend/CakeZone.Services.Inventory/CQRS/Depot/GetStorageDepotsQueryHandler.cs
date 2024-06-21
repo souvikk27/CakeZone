@@ -5,7 +5,7 @@ using MediatR;
 
 namespace CakeZone.Services.Inventory.CQRS.Depot
 {
-    public class GetStorageDepotsQueryHandler : IRequestHandler<GetStorageDepotsQuery, IEnumerable<StorageDepot>>
+    public class GetStorageDepotsQueryHandler : IRequestHandler<GetStorageDepotsQuery, PagedList<StorageDepot>>
     {
         private readonly IStorageDepotRepository _storageDepotRepository;
 
@@ -14,7 +14,7 @@ namespace CakeZone.Services.Inventory.CQRS.Depot
             _storageDepotRepository = storageDepotRepository;
         }
 
-        public async Task<IEnumerable<StorageDepot>> Handle(GetStorageDepotsQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<StorageDepot>> Handle(GetStorageDepotsQuery request, CancellationToken cancellationToken)
         {
             var storageDepots = await _storageDepotRepository.ListAllAsync();
 

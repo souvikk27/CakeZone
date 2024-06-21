@@ -23,7 +23,11 @@ namespace CakeZone.Services.Inventory.Controllers
         {
             var query = new GetStorageDepotsQuery(parameter);
             var depots = await _mediator.Send(query);
-            return ApiResponseExtension.ToPaginatedApiResult(depots);
+            return ApiResponseExtension.ToPaginatedApiResult(depots,
+                "storage depots",
+                "200",
+                depots.MetaData.CurrentPage,
+                depots.MetaData.TotalPages);
         }
 
         [HttpPost]

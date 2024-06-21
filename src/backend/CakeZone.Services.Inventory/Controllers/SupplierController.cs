@@ -51,10 +51,10 @@ namespace CakeZone.Services.Inventory.Controllers
             return ApiResponseExtension.ToSuccessApiResult(supplier);
         }
         
-        [HttpDelete("{id}")]
+        [HttpDelete("{supplierId}")]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public async Task<IActionResult> DeleteSupplier([FromQuery] Guid supplierId)
+        public async Task<IActionResult> DeleteSupplier(Guid supplierId)
         {
             var command = new DeleteSupplierCommand(supplierId);
             var supplier = await _mediator.Send(command);

@@ -17,7 +17,7 @@ namespace CakeZone.Services.Inventory.Repository.Inv
 
         public async Task<Model.Inventory> GetByStorageDepotIdAndProductIdAsync(Guid storageDepotId, Guid productId)
         {
-            return await Context.Inventory.FirstOrDefaultAsync(i =>
+            return await Context.Inventory.AsNoTracking().FirstOrDefaultAsync(i =>
                 i.StorageDepotId == storageDepotId && i.ProductId == productId);
         }
     }

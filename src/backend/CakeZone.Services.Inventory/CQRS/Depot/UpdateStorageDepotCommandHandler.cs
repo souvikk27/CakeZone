@@ -19,9 +19,9 @@ public class UpdateStorageDepotCommandHandler : IRequestHandler<UpdateStorageDep
 
     public async Task<StorageDepot> Handle(UpdateStorageDepotCommand request, CancellationToken cancellationToken)
     {
-        var existStorageDepot = await _storageDepotRepository.GetByIdAsync(request.UpdateStorageDepotDto.Id);
+        var existStorageDepot = await _storageDepotRepository.CheckExistsAsync(c => c.Id == request.UpdateStorageDepotDto.Id);
 
-        if (existStorageDepot == null)
+        if (!existStorageDepot)
         {
             throw new NotFoundApiException(
                 "Requested storage depot is not not found, either validate parameters or contact support");

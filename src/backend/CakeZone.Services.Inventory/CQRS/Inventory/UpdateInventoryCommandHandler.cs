@@ -17,9 +17,9 @@ namespace CakeZone.Services.Inventory.CQRS.Inventory
 
         public async Task<Model.Inventory> Handle(UpdateInventoryCommand request, CancellationToken cancellationToken)
         {
-            var inventoyExists = await _inventoryService.GetByStorageDepotIdAndProductIdAsync(request.UpdateInventoryDto.StorageDepotId, request.UpdateInventoryDto.ProductId);
+            var inventoryExists = await _inventoryService.GetByStorageDepotIdAndProductIdAsync(request.UpdateInventoryDto.StorageDepotId, request.UpdateInventoryDto.ProductId);
 
-            if (inventoyExists == null)
+            if (inventoryExists == null)
             {
                 throw new Exception("Inventory not found or validate the id");
             }

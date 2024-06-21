@@ -47,9 +47,9 @@ namespace CakeZone.Services.Inventory.Controllers
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStorageDepot(Guid depotId)
+        public async Task<IActionResult> DeleteStorageDepot(Guid id)
         {
-            var command = new DeleteStorageDepotCommand(depotId);
+            var command = new DeleteStorageDepotCommand(id);
             var storageDepot = await _mediator.Send(command);
             return ApiResponseExtension.ToSuccessApiResult(storageDepot);
         }

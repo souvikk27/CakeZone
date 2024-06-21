@@ -1,10 +1,11 @@
-﻿namespace CakeZone.Services.Inventory.Services
+﻿#pragma warning disable CS0169 // Field is never used
+namespace CakeZone.Services.Inventory.Services
 {
     public class PagedList<T> : List<T>
     {
-        //private int totalCount;
-        //private int pageNumber;
-        //private int pageSize;
+        private int totalCount;
+        private int pageNumber;
+        private int pageSize;
 
         public MetaData MetaData { get; set; }
         public PagedList(List<T> items, int count, int pageNumber, int pageSize)

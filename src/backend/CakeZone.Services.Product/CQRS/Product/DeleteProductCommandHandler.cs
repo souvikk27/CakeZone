@@ -12,14 +12,7 @@ namespace CakeZone.Services.Product.CQRS.Product
         }
         public async Task<Model.Product> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(request.Id);
-            if (product == null)
-            {
-                throw new NotFoundApiException($"Product with ID {request.Id} not found");
-            }
-
-            await _productRepository.DeleteAsync(product);
-            await _productRepository.SaveChangesAsync();
+            var product = await _productRepository.RemoveProductTransactionalAsync(request.Id);
             return product;
         }
     }

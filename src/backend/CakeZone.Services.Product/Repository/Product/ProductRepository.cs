@@ -80,5 +80,45 @@ namespace CakeZone.Services.Product.Repository.Product
             }
             return true;
         }
+
+        public async Task<Model.Product> RemoveProductTransactionalAsync(Guid productId)
+        {
+            var product = await Context.Products.Where(p => p.Id == productId).FirstOrDefaultAsync();
+
+            if (product == null)
+            {
+                throw new InvalidOperationException("Product not found either make sure the product id is correct or contact support");
+            }
+
+            var connectionString = Context.Database.GetConnectionString();
+
+            await using (var connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+
+                await using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        var categoryQuery = $@"DELETE FROM [dbo].[ProductCategories] WHERE ProductId = '{productId}'";
+                        await connection.ExecuteAsync(categoryQuery, transaction: transaction);
+
+                        var attributeQuery = $@"DELETE FROM [dbo].[ProductAttributes] WHERE ProductId = '{productId}'";
+                        await connection.ExecuteAsync(attributeQuery, transaction: transaction);
+
+                        var productQuery = $"DelETE FROM [dbo].[Products] WHERE Id = '{productId}'";
+                        await connection.ExecuteAsync(productQuery, transaction: transaction);
+
+                        transaction.Commit();
+                    }
+                    catch(Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(ex.Message);
+                    }
+                }
+            }
+            return product;
+        }
     }
 }

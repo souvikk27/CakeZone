@@ -1,4 +1,4 @@
-
+#pragma warning disable CS0169 // Field is never used
 namespace CakeZone.Services.Product.Services;
 
 public class PagedList<T> : List<T>

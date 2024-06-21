@@ -95,13 +95,6 @@ namespace CakeZone.Services.Product.Controllers
             
             var command = new CreateProductCommand(productCreateDto);
             var product = await _mediator.Send(command);
-            if(product != null)
-            {
-                return ApiResponseExtension.ToErrorApiResult("Bad Request", 
-                    $"Product with name {productCreateDto.Products.Name} " +
-                    $"already exists either change product name or contact support!", "400");
-            }
-
             var productCreated = new ProductCreated
             {
                 ProductId = productCreateDto.Products.Id,
@@ -110,7 +103,6 @@ namespace CakeZone.Services.Product.Controllers
                 CurrentLevel = 1000,
                 MinLevel = 500
             };
-
             await _publishEndpoint.Publish(productCreated);
             return ApiResponseExtension.ToSuccessApiResult(product, "Product created", "200");
         }

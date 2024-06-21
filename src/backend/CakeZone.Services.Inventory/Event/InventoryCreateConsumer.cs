@@ -20,7 +20,7 @@ namespace CakeZone.Services.Inventory.Event
             var inventory = new Model.Inventory()
             {
                 ProductId = context.Message.ProductId,
-                StorageDepotId = Guid.Parse("4046081A-3ED3-466C-B9FB-A47900BEE007"),
+                StorageDepotId = Guid.Parse("a015feaa-b072-4361-a056-7c6bf229b2a6"),
                 CurrentLevel = 1000,
                 MinLevel = 500,
                 Demand = 1000,

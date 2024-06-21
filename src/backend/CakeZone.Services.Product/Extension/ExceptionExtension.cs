@@ -1,4 +1,5 @@
-﻿using CakeZone.Services.Product.Services.Logging;
+﻿using CakeZone.Services.Product.Model.Error;
+using CakeZone.Services.Product.Services.Logging;
 using Microsoft.AspNetCore.Diagnostics;
 using BadRequestApiException = CakeZone.Services.Product.Model.Exception.BadRequestApiException;
 using ErrorDetails = CakeZone.Services.Product.Model.Error.ErrorDetails;
@@ -25,11 +26,14 @@ namespace CakeZone.Services.Product.Extension
                             MutedApiException => StatusCodes.Status500InternalServerError,
                             _ => StatusCodes.Status500InternalServerError
                         };
+                        var statusType = HttpStatus.GetHttpStatusType(context.Response.StatusCode);
                         logger.LogError($"Something went wrong {contextFeature.Error}");
-                        await context.Response.WriteAsync(new ErrorDetails()
+                        await context.Response.WriteAsync(new ErrorDetails
                         {
+                            ApiResponseId = Guid.NewGuid(),
                             Instance = context.Request.Path,
-                            SattusCode = context.Response.StatusCode,
+                            StatusCode = context.Response.StatusCode,
+                            Status = statusType.ToString(),
                             Message = contextFeature.Error.Message,
                         }.ToString());
                     }

@@ -9,4 +9,6 @@ public interface IProductRepository : IRepositoryBase<Model.Product>
     Task<bool> AddProductsWithParametersAsync(Model.Product product,
         Guid categoryId,
         IEnumerable<AttributeProductDto> attributeProducts);
+
+    Task<Model.Product> RemoveProductTransactionalAsync(Guid productId);
 }

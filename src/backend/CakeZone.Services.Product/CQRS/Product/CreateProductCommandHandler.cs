@@ -21,14 +21,14 @@ namespace CakeZone.Services.Product.CQRS.Product
 
             if (productExist.Any())
             {
-                return productExist.FirstOrDefault();
+                throw new Exception($"Product with name {request.ProductCreateDto.Products.Name} already exist");
             }
 
             var product = _mapper.Map<Model.Product>(request.ProductCreateDto.Products);
             await _productRepository.AddProductsWithParametersAsync(product, request.ProductCreateDto.CategoryId, request.ProductCreateDto.AttributeProduct);
             await _productRepository.SaveChangesAsync();
 
-            return null;
+            return product;
         }
     }
 }

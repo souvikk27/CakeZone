@@ -34,9 +34,9 @@ namespace CakeZone.Services.Inventory.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        public async Task<IActionResult> CreateStockIssue([FromBody] CreateStockIssueDto createStockIssue)
+        public async Task<IActionResult> CreateStockIssue([FromBody] CreateStockIssueDto createStockReceipt)
         {
-            var command = new CreateStockIssueCommand(createStockIssue);
+            var command = new CreateStockIssueCommand(createStockReceipt);
             var stockIssue = await _mediator.Send(command);
             return ApiResponseExtension.ToSuccessApiResult(stockIssue);
         }

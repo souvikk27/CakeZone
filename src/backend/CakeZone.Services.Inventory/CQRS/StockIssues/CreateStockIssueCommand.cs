@@ -6,11 +6,11 @@ namespace CakeZone.Services.Inventory.CQRS.StockIssues
 {
     public class CreateStockIssueCommand : IRequest<StockIssue>
     {
-        public CreateStockIssueDto CreateStockIssueDto { get; set; }
+        public CreateStockIssueDto CreateStockReceiptDto { get; set; }
 
-        public CreateStockIssueCommand(CreateStockIssueDto createStockIssueDto)
+        public CreateStockIssueCommand(CreateStockIssueDto createStockReceiptDto)
         {
-            CreateStockIssueDto = createStockIssueDto;
+            CreateStockReceiptDto = createStockReceiptDto;
         }
     }
 }

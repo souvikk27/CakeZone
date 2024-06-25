@@ -19,7 +19,7 @@ namespace CakeZone.Services.Inventory.CQRS.StockIssues
         public async Task<StockIssue> Handle(CreateStockIssueCommand request, CancellationToken cancellationToken)
         {
             var stockIssues =
-                await _stockIssuesRepository.AddAsync(_mapper.Map<StockIssue>(request.CreateStockIssueDto));
+                await _stockIssuesRepository.AddAsync(_mapper.Map<StockIssue>(request.CreateStockReceiptDto));
             return stockIssues;
         }
     }

@@ -33,4 +33,9 @@
     <ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\StockReceipt\" />
+    <Folder Include="Shared\StockReceipt\" />
+  </ItemGroup>
+
 </Project>

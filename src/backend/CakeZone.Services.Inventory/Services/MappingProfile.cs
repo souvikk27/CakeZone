@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CakeZone.Services.Inventory.Shared.Depot;
 using CakeZone.Services.Inventory.Shared.Inventory;
+using CakeZone.Services.Inventory.Shared.StockIssues;
 using CakeZone.Services.Inventory.Shared.Supplier;
 
 namespace CakeZone.Services.Inventory.Services
@@ -20,6 +21,10 @@ namespace CakeZone.Services.Inventory.Services
             //Supplier Mappings
             CreateMap<CreateSupplierDto, Model.Supplier>();
             CreateMap<UpdateSupplierDto, Model.Supplier>();
+
+            //StockIssues Mapping 
+            CreateMap<CreateStockIssueDto, Model.StockIssue>();
+            CreateMap<UpdateStockIssueDto, Model.StockIssue>(); 
         }
     }
 }

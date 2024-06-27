@@ -37,6 +37,16 @@ namespace CakeZone.Services.Inventory.Extension
                         .AllowAnyHeader());
             });
         }
+        
+        public static void UseAutoMigrationBuilder(this WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+            }
+        }
 
         public static void ConfigureMassTransit(this IServiceCollection services)
         {

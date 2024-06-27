@@ -30,7 +30,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAutoMigrationBuilder();
 app.UseHttpsRedirection();
 app.ConfigureExceptionHandler(logger);
 app.UseAuthorization();
